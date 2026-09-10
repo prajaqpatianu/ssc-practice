@@ -1452,4 +1452,241 @@ footer span {
   <div class="section-title">
 
     <h2>
-      Got 
+      Got Questions?
+    </h2>
+
+    <p>
+      A few things you might want to know.
+    </p>
+
+  </div>
+
+
+  <div class="faq-container">
+
+
+    <details class="faq-item">
+
+      <summary>
+        Is this platform free?
+      </summary>
+
+      <p>
+        The goal of SSC Practice Hub is to provide free
+        practice resources without putting essential
+        preparation behind a paywall.
+      </p>
+
+    </details>
+
+
+    <details class="faq-item">
+
+      <summary>
+        How do I use the Telegram bot?
+      </summary>
+
+      <p>
+        Open @anu_ssc_bot on Telegram and press Start.
+        The bot will gradually provide practice features
+        as the system is developed.
+      </p>
+
+    </details>
+
+
+    <details class="faq-item">
+
+      <summary>
+        Which SSC exams is this useful for?
+      </summary>
+
+      <p>
+        The platform is being built around SSC CHSL,
+        CGL, MTS, CPO and other major SSC exam patterns.
+      </p>
+
+    </details>
+
+
+    <details class="faq-item">
+
+      <summary>
+        Will the questions be actual PYQs?
+      </summary>
+
+      <p>
+        PYQs will be clearly identified. Fresh practice
+        questions will be labelled separately so you can
+        always know what type of question you are solving.
+      </p>
+
+    </details>
+
+
+  </div>
+
+</section>
+
+
+<!-- ================= ABOUT ================= -->
+
+<section id="about">
+
+  <div class="about-card">
+
+
+    <div class="avatar">
+      A
+    </div>
+
+
+    <div>
+
+      <h3>
+        Anurag Kumar
+      </h3>
+
+
+      <div class="role">
+        Creator & Developer
+      </div>
+
+
+      <p>
+        Based in Jamui, Bihar, and currently pursuing
+        a B.A. in Hindi at Munger University,
+        I enjoy combining learning science with technology.
+      </p>
+
+
+      <p>
+        From UI and logic for mobile games to video editing
+        and digital projects, I enjoy building things.
+        SSC Practice Hub is an attempt to turn those skills
+        into something genuinely useful for students.
+      </p>
+
+
+      <div class="tags">
+
+        <span class="tag">
+          Game Dev
+        </span>
+
+        <span class="tag">
+          Video Editing
+        </span>
+
+        <span class="tag">
+          UI/UX Design
+        </span>
+
+        <span class="tag">
+          Content Creator
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+  © 2026 SSC Practice Hub ·
+  Designed & Built by
+  <span>Anurag</span>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+/* THEME TOGGLE */
+
+const themeToggle =
+  document.getElementById("themeToggle");
+
+const savedTheme =
+  localStorage.getItem("theme");
+
+
+if (savedTheme === "light") {
+
+  document.body.classList.add("light-mode");
+
+  themeToggle.textContent = "🌙";
+
+}
+
+
+themeToggle.addEventListener("click", () => {
+
+  document.body.classList.toggle("light-mode");
+
+
+  if (
+    document.body.classList.contains("light-mode")
+  ) {
+
+    themeToggle.textContent = "🌙";
+
+    localStorage.setItem("theme","light");
+
+  } else {
+
+    themeToggle.textContent = "☀️";
+
+    localStorage.setItem("theme","dark");
+
+  }
+
+});
+
+
+/* MOBILE MENU */
+
+const menuToggle =
+  document.getElementById("menuToggle");
+
+const mobileMenu =
+  document.getElementById("mobileMenu");
+
+
+menuToggle.addEventListener("click", () => {
+
+  mobileMenu.classList.toggle("active");
+
+});
+
+
+/* CLOSE MOBILE MENU AFTER CLICK */
+
+const mobileLinks =
+  mobileMenu.querySelectorAll("a");
+
+
+mobileLinks.forEach(link => {
+
+  link.addEventListener("click", () => {
+    
+mobileMenu.classList.remove("active");
+
+  });
+
+});
+
+</script>
+
+</body>
+</html>
