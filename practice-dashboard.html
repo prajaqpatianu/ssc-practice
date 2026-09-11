@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSC Practice</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #08090c;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .box {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 25px;
+      background: #111319;
+      border: 1px solid #252934;
+      border-radius: 18px;
+    }
+
+    h1 {
+      color: #ff5a2e;
+    }
+
+    button {
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 10px;
+      background: #c6ff3d;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+    <h1>SSC Practice</h1>
+
+    <p id="status">
+      Loading questions...
+    </p>
+
+    <button onclick="goBack()">
+      Back to Setup
+    </button>
+  </div>
+
+  <script>
+    function goBack() {
+      window.location.href = "practice-dashboard.html";
+    }
+
+    fetch("questions.json")
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error("questions.json not found");
+        }
+
+        return response.json();
+      })
+      .then(function(data) {
+        document.getElementById("status").innerText =
+          "Question bank loaded successfully. Questions: " + data.length;
+      })
+      .catch(function(error) {
+        document.getElementById("status").innerText =
+          "Error: " + error.message;
+      });
+  </script>
+
+</body>
+</html>
