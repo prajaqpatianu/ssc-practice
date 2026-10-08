@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>SSC Practice | Quiz</title>
 
   <style>
@@ -27,9 +28,18 @@
     body {
       font-family: Inter, Arial, sans-serif;
       background:
-        radial-gradient(circle at 20% 0%, rgba(255,90,46,.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(198,255,61,.08), transparent 28%),
+        radial-gradient(
+          circle at 20% 0%,
+          rgba(255,90,46,.12),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 90% 20%,
+          rgba(198,255,61,.08),
+          transparent 28%
+        ),
         var(--bg);
+
       color: var(--text);
       min-height: 100vh;
     }
@@ -44,7 +54,9 @@
       padding: 20px 0 50px;
     }
 
-    /* HEADER */
+    /* =========================
+       HEADER
+    ========================= */
 
     .topbar {
       display: flex;
@@ -73,7 +85,9 @@
       font-size: 12px;
     }
 
-    /* PROGRESS */
+    /* =========================
+       PROGRESS
+    ========================= */
 
     .progress-card {
       background: rgba(17,19,26,.9);
@@ -105,12 +119,18 @@
     .progress-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      background: linear-gradient(
+        90deg,
+        var(--accent),
+        var(--accent2)
+      );
       border-radius: inherit;
       transition: width .3s ease;
     }
 
-    /* QUESTION */
+    /* =========================
+       QUESTION CARD
+    ========================= */
 
     .question-card {
       background: rgba(17,19,26,.94);
@@ -131,11 +151,15 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
+
       background: rgba(255,90,46,.1);
       border: 1px solid rgba(255,90,46,.25);
+
       color: #ff8a6b;
+
       padding: 7px 10px;
       border-radius: 999px;
+
       font-size: 12px;
       font-weight: 700;
     }
@@ -152,26 +176,43 @@
       margin-bottom: 24px;
     }
 
-    /* OPTIONS */
+    /* =========================
+       OPTIONS
+    ========================= */
 
     .options {
       display: grid;
       gap: 12px;
+      margin-bottom: 12px;
     }
 
     .option {
       width: 100%;
+
       text-align: left;
+
       border: 1px solid var(--border);
+
       background: var(--card2);
+
       color: var(--text);
+
       padding: 16px;
+
       border-radius: 15px;
+
       cursor: pointer;
-      transition: .2s ease;
+
+      transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+
       display: flex;
       align-items: center;
       gap: 13px;
+
+      min-height: 64px;
     }
 
     .option:hover {
@@ -181,18 +222,24 @@
 
     .option.selected {
       border-color: var(--accent);
-      background: rgba(255,90,46,.1);
+      background: rgba(255,90,46,.12);
     }
 
     .option-letter {
-      min-width: 34px;
-      height: 34px;
+      min-width: 36px;
+      height: 36px;
+
       border-radius: 10px;
+
       display: grid;
       place-items: center;
+
       background: #222631;
+
       font-weight: 800;
       font-size: 13px;
+
+      flex-shrink: 0;
     }
 
     .option.selected .option-letter {
@@ -200,7 +247,14 @@
       color: white;
     }
 
-    /* CONTROLS */
+    .option-text {
+      line-height: 1.4;
+      font-size: 15px;
+    }
+
+    /* =========================
+       CONTROLS
+    ========================= */
 
     .controls {
       display: flex;
@@ -210,12 +264,20 @@
 
     .btn {
       border: 1px solid var(--border);
+
       background: var(--card2);
+
       color: var(--text);
+
       padding: 13px 17px;
+
       border-radius: 13px;
+
       cursor: pointer;
+
       font-weight: 700;
+
+      transition: .2s ease;
     }
 
     .btn:hover {
@@ -232,6 +294,7 @@
     .btn:disabled {
       opacity: .4;
       cursor: not-allowed;
+      transform: none;
     }
 
     .review-btn {
@@ -244,9 +307,12 @@
     .review-btn.active {
       color: var(--accent2);
       border-color: var(--accent2);
+      background: rgba(198,255,61,.05);
     }
 
-    /* LOADING */
+    /* =========================
+       LOADING
+    ========================= */
 
     .loading {
       text-align: center;
@@ -257,10 +323,15 @@
     .loader {
       width: 38px;
       height: 38px;
+
       border: 3px solid #292d38;
+
       border-top-color: var(--accent);
+
       border-radius: 50%;
+
       animation: spin .8s linear infinite;
+
       margin: 0 auto 18px;
     }
 
@@ -270,7 +341,30 @@
       }
     }
 
-    /* RESULT */
+    /* =========================
+       ERROR
+    ========================= */
+
+    .error-box {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--muted);
+    }
+
+    .error-icon {
+      font-size: 42px;
+      margin-bottom: 14px;
+    }
+
+    .error-box strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    /* =========================
+       RESULT
+    ========================= */
 
     .result {
       display: none;
@@ -278,10 +372,15 @@
 
     .result-header {
       text-align: center;
+
       padding: 30px 20px;
+
       background: rgba(17,19,26,.95);
+
       border: 1px solid var(--border);
+
       border-radius: 22px;
+
       margin-bottom: 16px;
     }
 
@@ -305,21 +404,30 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
       gap: 10px;
+
       margin-top: 22px;
     }
 
     .stat {
       background: var(--card2);
+
       border: 1px solid var(--border);
+
       border-radius: 14px;
+
       padding: 14px 8px;
     }
 
     .stat strong {
       display: block;
+
       font-size: 20px;
+
       margin-bottom: 4px;
     }
 
@@ -329,8 +437,11 @@
 
     .wrong-section {
       background: rgba(17,19,26,.95);
+
       border: 1px solid var(--border);
+
       border-radius: 22px;
+
       padding: 20px;
     }
 
@@ -341,21 +452,29 @@
 
     .wrong-item {
       border: 1px solid var(--border);
+
       background: var(--card2);
+
       border-radius: 15px;
+
       padding: 16px;
+
       margin-bottom: 12px;
     }
 
     .wrong-q {
       font-weight: 700;
+
       line-height: 1.5;
+
       margin-bottom: 10px;
     }
 
     .answer-line {
       font-size: 13px;
+
       margin-top: 5px;
+
       color: var(--muted);
     }
 
@@ -365,22 +484,41 @@
 
     .explanation {
       margin-top: 12px;
+
       padding: 12px;
+
       background: rgba(198,255,61,.05);
+
       border-left: 3px solid var(--accent2);
+
       border-radius: 8px;
+
       color: #cdd2dd;
+
       font-size: 13px;
+
       line-height: 1.6;
     }
 
     .empty-wrong {
       text-align: center;
+
       padding: 25px;
+
       color: var(--accent2);
     }
 
+    .restart-btn {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
     @media (max-width: 600px) {
+
       .container {
         width: 94%;
         padding-top: 14px;
@@ -397,6 +535,11 @@
 
       .option {
         padding: 13px;
+        min-height: 58px;
+      }
+
+      .option-text {
+        font-size: 14px;
       }
 
       .controls {
@@ -410,6 +553,10 @@
       .stat {
         padding: 12px 5px;
       }
+
+      .score {
+        font-size: 48px;
+      }
     }
   </style>
 </head>
@@ -418,96 +565,242 @@
 
   <main class="container">
 
+    <!-- =========================
+         QUIZ SCREEN
+    ========================== -->
+
     <div id="quizScreen">
 
       <div class="topbar">
-        <div class="brand">SSC<span>Practice</span></div>
-        <div class="exam-badge" id="examBadge">Loading...</div>
+
+        <div class="brand">
+          SSC<span>Practice</span>
+        </div>
+
+        <div
+          class="exam-badge"
+          id="examBadge">
+          Loading...
+        </div>
+
       </div>
 
+
+      <!-- PROGRESS -->
+
       <div class="progress-card">
+
         <div class="progress-info">
-          <span id="questionNumber">Question 1</span>
-          <span id="questionCount">0 / 0</span>
+
+          <span id="questionNumber">
+            Question 1
+          </span>
+
+          <span id="questionCount">
+            0 / 0
+          </span>
+
         </div>
 
         <div class="progress-track">
-          <div class="progress-fill" id="progressFill"></div>
+
+          <div
+            class="progress-fill"
+            id="progressFill">
+          </div>
+
         </div>
+
       </div>
 
-      <div id="loadingBox" class="loading">
+
+      <!-- LOADING -->
+
+      <div
+        id="loadingBox"
+        class="loading">
+
         <div class="loader"></div>
+
         Loading your practice questions...
+
       </div>
 
-      <section id="questionCard" class="question-card" style="display:none;">
+
+      <!-- QUESTION -->
+
+      <section
+        id="questionCard"
+        class="question-card"
+        style="display:none;">
 
         <div class="question-meta">
-          <div class="subject" id="subjectName">Maths</div>
-          <div class="difficulty" id="difficulty">Easy</div>
+
+          <div
+            class="subject"
+            id="subjectName">
+            Maths
+          </div>
+
+          <div
+            class="difficulty"
+            id="difficulty">
+            Easy
+          </div>
+
         </div>
 
-        <div class="question" id="questionText"></div>
 
-        <div class="options" id="options"></div>
+        <div
+          class="question"
+          id="questionText">
+        </div>
 
-        <button class="btn review-btn" id="reviewBtn">
+
+        <!-- OPTIONS -->
+
+        <div
+          class="options"
+          id="options">
+        </div>
+
+
+        <!-- REVIEW -->
+
+        <button
+          class="btn review-btn"
+          id="reviewBtn">
+
           ☆ Mark for Review
+
         </button>
 
+
+        <!-- NAVIGATION -->
+
         <div class="controls">
-          <button class="btn" id="prevBtn">← Previous</button>
-          <button class="btn primary" id="nextBtn">Next →</button>
+
+          <button
+            class="btn"
+            id="prevBtn">
+
+            ← Previous
+
+          </button>
+
+          <button
+            class="btn primary"
+            id="nextBtn">
+
+            Next →
+
+          </button>
+
         </div>
 
       </section>
 
     </div>
 
-    <!-- RESULT -->
 
-    <section id="resultScreen" class="result">
+    <!-- =========================
+         RESULT SCREEN
+    ========================== -->
+
+    <section
+      id="resultScreen"
+      class="result">
+
 
       <div class="result-header">
 
-        <div class="result-label">PRACTICE COMPLETE</div>
-
-        <div class="score" id="finalScore">0/0</div>
-
-        <div class="accuracy" id="finalAccuracy">
-          Accuracy 0%
+        <div class="result-label">
+          PRACTICE COMPLETE
         </div>
+
+
+        <div
+          class="score"
+          id="finalScore">
+
+          0/0
+
+        </div>
+
+
+        <div
+          class="accuracy"
+          id="finalAccuracy">
+
+          Accuracy 0%
+
+        </div>
+
 
         <div class="stats">
 
-          <div class="stat">
-            <strong id="correctCount">0</strong>
-            <small>Correct</small>
-          </div>
 
           <div class="stat">
-            <strong id="wrongCount">0</strong>
-            <small>Wrong</small>
+
+            <strong id="correctCount">
+              0
+            </strong>
+
+            <small>
+              Correct
+            </small>
+
           </div>
 
+
           <div class="stat">
-            <strong id="skippedCount">0</strong>
-            <small>Skipped</small>
+
+            <strong id="wrongCount">
+              0
+            </strong>
+
+            <small>
+              Wrong
+            </small>
+
           </div>
+
+
+          <div class="stat">
+
+            <strong id="skippedCount">
+              0
+            </strong>
+
+            <small>
+              Skipped
+            </small>
+
+          </div>
+
 
         </div>
 
       </div>
 
+
+      <!-- WRONG QUESTIONS -->
+
       <div class="wrong-section">
 
-        <h2>❌ Review Your Mistakes</h2>
+        <h2>
+          ❌ Review Your Mistakes
+        </h2>
 
         <div id="wrongQuestions"></div>
 
-        <button class="btn primary" onclick="location.reload()">
+
+        <button
+          class="btn primary restart-btn"
+          id="restartBtn">
+
           Practice Again
+
         </button>
 
       </div>
@@ -516,369 +809,940 @@
 
   </main>
 
+
 <script>
 
-  /* =========================================
+  /* =====================================================
      SSC PRACTICE ENGINE
-  ========================================= */
+  ===================================================== */
+
 
   let allQuestions = [];
+
   let quizQuestions = [];
 
   let currentIndex = 0;
 
   let answers = [];
+
   let reviewQuestions = [];
 
-  const EXAM_KEY = "ssc_exam";
-  const LANGUAGE_KEY = "ssc_language";
-  const SETUP_KEY = "ssc_setup_done";
+
+  /* STORAGE KEYS */
+
+  const EXAM_KEY =
+    "ssc_exam";
+
+  const LANGUAGE_KEY =
+    "ssc_language";
+
+  const SETUP_KEY =
+    "ssc_setup_done";
+
+  const HISTORY_KEY =
+    "ssc_attempt_history";
 
 
-  /* =========================================
+  /* =====================================================
      SAFE STORAGE
-  ========================================= */
+  ===================================================== */
 
   function getStorage(key) {
+
     try {
+
       return localStorage.getItem(key);
+
     } catch (error) {
+
+      console.error(
+        "Storage read error:",
+        error
+      );
+
       return null;
+
     }
+
   }
 
 
-  /* =========================================
+  function setStorage(key, value) {
+
+    try {
+
+      localStorage.setItem(
+        key,
+        value
+      );
+
+      return true;
+
+    } catch (error) {
+
+      console.error(
+        "Storage save error:",
+        error
+      );
+
+      return false;
+
+    }
+
+  }
+
+
+  /* =====================================================
      INITIALIZE
-  ========================================= */
+  ===================================================== */
 
   async function init() {
 
-    const exam = getStorage(EXAM_KEY);
-    const language = getStorage(LANGUAGE_KEY);
-    const setupDone = getStorage(SETUP_KEY);
+    const exam =
+      getStorage(EXAM_KEY);
+
+    const language =
+      getStorage(LANGUAGE_KEY);
+
+    const setupDone =
+      getStorage(SETUP_KEY);
+
 
     /*
-      Never silently choose an exam.
-      If setup is missing, send the user
-      back to the dashboard.
+      Setup missing?
+      Go back to dashboard.
     */
 
-    if (!exam || !language || setupDone !== "true") {
-      window.location.href = "practice-dashboard.html";
+    if (
+      !exam ||
+      !language ||
+      setupDone !== "true"
+    ) {
+
+      window.location.href =
+        "practice-dashboard.html";
+
       return;
+
     }
 
-    document.getElementById("examBadge").textContent =
+
+    /*
+      Show exam + language
+    */
+
+    document.getElementById(
+      "examBadge"
+    ).textContent =
       exam + " • " + language;
+
 
     try {
 
-      const response = await fetch("questions.json");
+      /*
+        Load question bank
+      */
+
+      const response =
+        await fetch(
+          "questions.json",
+          {
+            cache: "no-store"
+          }
+        );
+
 
       if (!response.ok) {
-        throw new Error("Question file could not be loaded.");
+
+        throw new Error(
+          "questions.json could not be loaded."
+        );
+
       }
 
-      allQuestions = await response.json();
+
+      allQuestions =
+        await response.json();
+
+
+      /*
+        Make sure JSON is an array
+      */
+
+      if (
+        !Array.isArray(
+          allQuestions
+        )
+      ) {
+
+        throw new Error(
+          "questions.json must contain an array."
+        );
+
+      }
+
 
       prepareQuiz(exam);
 
+
     } catch (error) {
 
-      document.getElementById("loadingBox").innerHTML = `
-        <div style="font-size:40px;margin-bottom:12px;">⚠️</div>
-        <strong>Question bank couldn't load.</strong>
-        <p style="margin-top:8px;">
-          Please check that questions.json exists in the same folder.
-        </p>
-      `;
+      console.error(
+        "Question loading error:",
+        error
+      );
 
-      console.error(error);
+
+      showLoadingError(
+        error.message
+      );
+
     }
+
   }
 
 
-  /* =========================================
+  /* =====================================================
+     LOADING ERROR
+  ===================================================== */
+
+  function showLoadingError(message) {
+
+    const loadingBox =
+      document.getElementById(
+        "loadingBox"
+      );
+
+
+    loadingBox.innerHTML = "";
+
+
+    const wrapper =
+      document.createElement(
+        "div"
+      );
+
+    wrapper.className =
+      "error-box";
+
+
+    wrapper.innerHTML = `
+      <div class="error-icon">
+        ⚠️
+      </div>
+
+      <strong>
+        Question bank couldn't load.
+      </strong>
+
+      <p>
+        ${escapeHTML(message)}
+      </p>
+
+      <p style="margin-top:8px;">
+        Make sure questions.json is in the
+        same folder as practice.html.
+      </p>
+    `;
+
+
+    loadingBox.appendChild(
+      wrapper
+    );
+
+  }
+
+
+  /* =====================================================
      PREPARE QUIZ
-  ========================================= */
+  ===================================================== */
 
   function prepareQuiz(exam) {
 
-    const matching = allQuestions.filter(question => {
+    /*
+      Find questions for selected exam
+    */
 
-      if (!Array.isArray(question.exam)) {
-        return false;
-      }
+    const matching =
+      allQuestions.filter(
+        question => {
 
-      return question.exam.includes(exam);
+          if (
+            !Array.isArray(
+              question.exam
+            )
+          ) {
 
-    });
+            return false;
+
+          }
 
 
-    if (matching.length === 0) {
+          return question.exam.includes(
+            exam
+          );
 
-      document.getElementById("loadingBox").innerHTML = `
-        <div style="font-size:40px;margin-bottom:12px;">📚</div>
-        <strong>No questions available for ${exam} yet.</strong>
-        <p style="margin-top:8px;">
-          More questions will be added to the question bank.
-        </p>
+        }
+      );
+
+
+    /*
+      No questions
+    */
+
+    if (
+      matching.length === 0
+    ) {
+
+      document.getElementById(
+        "loadingBox"
+      ).innerHTML = `
+        <div class="error-box">
+
+          <div class="error-icon">
+            📚
+          </div>
+
+          <strong>
+            No questions available
+            for ${escapeHTML(exam)} yet.
+          </strong>
+
+          <p>
+            More questions will be added
+            to the question bank.
+          </p>
+
+        </div>
       `;
 
       return;
+
     }
 
 
     /*
-      Shuffle question bank.
-      Fisher-Yates shuffle.
+      Shuffle
     */
 
-    const shuffled = [...matching];
+    const shuffled =
+      [...matching];
 
-    for (let i = shuffled.length - 1; i > 0; i--) {
 
-      const j = Math.floor(Math.random() * (i + 1));
+    for (
+      let i = shuffled.length - 1;
+      i > 0;
+      i--
+    ) {
 
-      [shuffled[i], shuffled[j]] =
-        [shuffled[j], shuffled[i]];
+      const j =
+        Math.floor(
+          Math.random() * (i + 1)
+        );
+
+
+      [
+        shuffled[i],
+        shuffled[j]
+      ] =
+      [
+        shuffled[j],
+        shuffled[i]
+      ];
+
     }
 
 
     /*
-      Never duplicate a question.
-      Current bank has 30 questions,
-      so we use all available questions
-      until the bank reaches 50+.
+      Current bank:
+      use maximum 50 questions.
+
+      If bank has 40,
+      quiz will contain 40.
+
+      No duplicate questions.
     */
 
-    const quizSize = Math.min(50, shuffled.length);
+    const quizSize =
+      Math.min(
+        50,
+        shuffled.length
+      );
 
-    quizQuestions = shuffled.slice(0, quizSize);
+
+    quizQuestions =
+      shuffled.slice(
+        0,
+        quizSize
+      );
 
 
-    answers = new Array(quizQuestions.length).fill(null);
+    /*
+      Reset answers
+    */
+
+    answers =
+      new Array(
+        quizQuestions.length
+      ).fill(null);
+
+
+    /*
+      Reset review marks
+    */
 
     reviewQuestions =
-      new Array(quizQuestions.length).fill(false);
+      new Array(
+        quizQuestions.length
+      ).fill(false);
 
 
-    document.getElementById("loadingBox").style.display = "none";
+    currentIndex = 0;
 
-    document.getElementById("questionCard").style.display = "block";
+
+    /*
+      Show quiz
+    */
+
+    document.getElementById(
+      "loadingBox"
+    ).style.display =
+      "none";
+
+
+    document.getElementById(
+      "questionCard"
+    ).style.display =
+      "block";
+
 
     showQuestion();
+
   }
 
 
-  /* =========================================
+  /* =====================================================
      SHOW QUESTION
-  ========================================= */
+  ===================================================== */
 
   function showQuestion() {
 
-    const q = quizQuestions[currentIndex];
+    const q =
+      quizQuestions[
+        currentIndex
+      ];
+
+
+    /*
+      Safety
+    */
 
     if (!q) {
+
       finishQuiz();
+
       return;
+
     }
 
 
-    const total = quizQuestions.length;
+    const total =
+      quizQuestions.length;
 
-    document.getElementById("questionNumber").textContent =
-      "Question " + (currentIndex + 1);
 
-    document.getElementById("questionCount").textContent =
-      (currentIndex + 1) + " / " + total;
+    /*
+      Question number
+    */
 
+    document.getElementById(
+      "questionNumber"
+    ).textContent =
+      "Question " +
+      (currentIndex + 1);
+
+
+    /*
+      Question count
+    */
+
+    document.getElementById(
+      "questionCount"
+    ).textContent =
+      (currentIndex + 1) +
+      " / " +
+      total;
+
+
+    /*
+      Progress
+    */
 
     const progress =
-      ((currentIndex + 1) / total) * 100;
+      (
+        (currentIndex + 1) /
+        total
+      ) * 100;
 
-    document.getElementById("progressFill").style.width =
+
+    document.getElementById(
+      "progressFill"
+    ).style.width =
       progress + "%";
 
 
-    document.getElementById("subjectName").textContent =
-      q.subject;
+    /*
+      Subject
+    */
+
+    document.getElementById(
+      "subjectName"
+    ).textContent =
+      q.subject || "General";
 
 
-    document.getElementById("difficulty").textContent =
-      q.difficulty;
+    /*
+      Difficulty
+    */
+
+    document.getElementById(
+      "difficulty"
+    ).textContent =
+      q.difficulty || "Practice";
 
 
-    document.getElementById("questionText").textContent =
-      q.question;
+    /*
+      Question
+    */
+
+    document.getElementById(
+      "questionText"
+    ).textContent =
+      q.question || "";
 
 
-    const optionsBox =
-      document.getElementById("options");
+    /*
+      OPTIONS
+    */
 
-    optionsBox.innerHTML = "";
-
-
-    const letters = ["A", "B", "C", "D"];
+    renderOptions(q);
 
 
-    q.options.forEach((option, index) => {
-
-      const button = document.createElement("button");
-
-      button.className = "option";
-
-
-      if (answers[currentIndex] === letters[index]) {
-        button.classList.add("selected");
-      }
-
-
-      button.innerHTML = `
-        <span class="option-letter">
-          ${letters[index]}
-        </span>
-
-        <span>
-          ${escapeHTML(option)}
-        </span>
-      `;
-
-
-      button.onclick = () => {
-
-        selectAnswer(letters[index]);
-
-      };
-
-
-      optionsBox.appendChild(button);
-
-    });
-
+    /*
+      Navigation
+    */
 
     updateButtons();
 
 
+    /*
+      Review button
+    */
+
+    updateReviewButton();
+
+  }
+
+
+  /* =====================================================
+     RENDER OPTIONS
+  ====================================================================== */
+
+  function renderOptions(q) {
+
+    const optionsBox =
+      document.getElementById(
+        "options"
+      );
+
+
+    /*
+      Clear old options
+    */
+
+    optionsBox.innerHTML = "";
+
+
+    /*
+      Make sure options exist
+    */
+
+    if (
+      !Array.isArray(
+        q.options
+      ) ||
+      q.options.length === 0
+    ) {
+
+      optionsBox.innerHTML = `
+        <div style="
+          padding:20px;
+          text-align:center;
+          color:#ff4d67;
+          border:1px solid #ff4d67;
+          border-radius:14px;
+        ">
+          ⚠️ Options missing for this question.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    const letters =
+      [
+        "A",
+        "B",
+        "C",
+        "D"
+      ];
+
+
+    q.options.forEach(
+      (option, index) => {
+
+        /*
+          Create button
+        */
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+
+        button.type =
+          "button";
+
+
+        button.className =
+          "option";
+
+
+        const letter =
+          letters[index];
+
+
+        /*
+          Selected state
+        */
+
+        if (
+          answers[currentIndex] ===
+          letter
+        ) {
+
+          button.classList.add(
+            "selected"
+          );
+
+        }
+
+
+        /*
+          Letter box
+        */
+
+        const letterBox =
+          document.createElement(
+            "span"
+          );
+
+        letterBox.className =
+          "option-letter";
+
+
+        letterBox.textContent =
+          letter;
+
+
+        /*
+          Option text
+        */
+
+        const textBox =
+          document.createElement(
+            "span"
+          );
+
+        textBox.className =
+          "option-text";
+
+
+        textBox.textContent =
+          String(option);
+
+
+        /*
+          Add elements
+        */
+
+        button.appendChild(
+          letterBox
+        );
+
+        button.appendChild(
+          textBox
+        );
+
+
+        /*
+          Click
+        */
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectAnswer(
+              letter
+            );
+
+          }
+        );
+
+
+        /*
+          Add button
+        */
+
+        optionsBox.appendChild(
+          button
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =====================================================
+     SELECT ANSWER
+  ===================================================== */
+
+  function selectAnswer(letter) {
+
+    answers[
+      currentIndex
+    ] = letter;
+
+
+    /*
+      Re-render so selected
+      option becomes highlighted.
+    */
+
+    showQuestion();
+
+  }
+
+
+  /* =====================================================
+     PREVIOUS BUTTON
+  ===================================================== */
+
+  document.getElementById(
+    "prevBtn"
+  ).addEventListener(
+    "click",
+    () => {
+
+      if (
+        currentIndex > 0
+      ) {
+
+        currentIndex--;
+
+        showQuestion();
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+
+      }
+
+    }
+  );
+
+
+  /* =====================================================
+     NEXT / FINISH BUTTON
+  ===================================================== */
+
+  document.getElementById(
+    "nextBtn"
+  ).addEventListener(
+    "click",
+    () => {
+
+      /*
+        More questions?
+      */
+
+      if (
+        currentIndex <
+        quizQuestions.length - 1
+      ) {
+
+        currentIndex++;
+
+        showQuestion();
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+
+        return;
+
+      }
+
+
+      /*
+        Last question
+        → Finish quiz
+      */
+
+      finishQuiz();
+
+    }
+  );
+
+
+  /* =====================================================
+     REVIEW BUTTON
+  ===================================================== */
+
+  document.getElementById(
+    "reviewBtn"
+  ).addEventListener(
+    "click",
+    () => {
+
+      reviewQuestions[
+        currentIndex
+      ] =
+        !reviewQuestions[
+          currentIndex
+        ];
+
+
+      updateReviewButton();
+
+    }
+  );
+
+
+  /* =====================================================
+     REVIEW BUTTON UI
+  ===================================================== */
+
+  function updateReviewButton() {
+
     const reviewBtn =
-      document.getElementById("reviewBtn");
+      document.getElementById(
+        "reviewBtn"
+      );
 
 
-    if (reviewQuestions[currentIndex]) {
+    if (
+      reviewQuestions[
+        currentIndex
+      ]
+    ) {
 
-      reviewBtn.classList.add("active");
+      reviewBtn.classList.add(
+        "active"
+      );
+
 
       reviewBtn.textContent =
         "★ Marked for Review";
 
     } else {
 
-      reviewBtn.classList.remove("active");
+      reviewBtn.classList.remove(
+        "active"
+      );
+
 
       reviewBtn.textContent =
         "☆ Mark for Review";
+
     }
 
   }
 
 
-  /* =========================================
-     SELECT ANSWER
-  ========================================= */
-
-  function selectAnswer(letter) {
-
-    answers[currentIndex] = letter;
-
-    showQuestion();
-
-  }
-
-
-  /* =========================================
-     NAVIGATION
-  ========================================= */
-
-  document.getElementById("prevBtn").onclick = () => {
-
-    if (currentIndex > 0) {
-
-      currentIndex--;
-
-      showQuestion();
-
-    }
-
-  };
-
-
-  document.getElementById("nextBtn").onclick = () => {
-
-    if (currentIndex < quizQuestions.length - 1) {
-
-      currentIndex++;
-
-      showQuestion();
-
-    } else {
-
-      finishQuiz();
-
-    }
-
-  };
-
-
-  /* =========================================
-     REVIEW
-  ========================================= */
-
-  document.getElementById("reviewBtn").onclick = () => {
-
-    reviewQuestions[currentIndex] =
-      !reviewQuestions[currentIndex];
-
-    showQuestion();
-
-  };
-
-
-  /* =========================================
-     BUTTON STATE
-  ========================================= */
+  /* =====================================================
+     NAVIGATION BUTTON STATE
+  ===================================================== */
 
   function updateButtons() {
 
     const prev =
-      document.getElementById("prevBtn");
+      document.getElementById(
+        "prevBtn"
+      );
+
 
     const next =
-      document.getElementById("nextBtn");
+      document.getElementById(
+        "nextBtn"
+      );
 
+
+    /*
+      Previous
+    */
 
     prev.disabled =
       currentIndex === 0;
 
 
-    if (currentIndex === quizQuestions.length - 1) {
+    /*
+      Last question
+    */
 
-      next.textContent = "Finish ✓";
+    if (
+      currentIndex ===
+      quizQuestions.length - 1
+    ) {
+
+      next.textContent =
+        "Finish ✓";
 
     } else {
 
-      next.textContent = "Next →";
+      next.textContent =
+        "Next →";
 
     }
 
   }
 
 
-  /* =========================================
+  /* =====================================================
      FINISH QUIZ
-  ========================================= */
+  ===================================================== */
 
   function finishQuiz() {
+
+    /*
+      Prevent accidental
+      double finish
+    */
+
+    if (
+      quizQuestions.length === 0
+    ) {
+
+      return;
+
+    }
+
 
     let correct = 0;
 
@@ -890,50 +1754,93 @@
     const wrongList = [];
 
 
-    quizQuestions.forEach((q, index) => {
+    /*
+      Check every question
+    */
 
-      const userAnswer = answers[index];
+    quizQuestions.forEach(
+      (q, index) => {
+
+        const userAnswer =
+          answers[index];
 
 
-      if (!userAnswer) {
+        /*
+          Skipped
+        */
 
-        skipped++;
+        if (!userAnswer) {
 
-        wrongList.push({
-          question: q,
-          userAnswer: null
-        });
+          skipped++;
 
-        return;
+
+          wrongList.push({
+            question: q,
+            userAnswer: null
+          });
+
+
+          return;
+
+        }
+
+
+        /*
+          Correct
+        */
+
+        if (
+          userAnswer ===
+          q.answer
+        ) {
+
+          correct++;
+
+        }
+
+
+        /*
+          Wrong
+        */
+
+        else {
+
+          wrong++;
+
+
+          wrongList.push({
+            question: q,
+            userAnswer:
+              userAnswer
+          });
+
+        }
 
       }
+    );
 
 
-      if (userAnswer === q.answer) {
-
-        correct++;
-
-      } else {
-
-        wrong++;
-
-        wrongList.push({
-          question: q,
-          userAnswer: userAnswer
-        });
-
-      }
-
-    });
+    const total =
+      quizQuestions.length;
 
 
-    const total = quizQuestions.length;
+    /*
+      Accuracy
+    */
 
     const accuracy =
       total > 0
-        ? Math.round((correct / total) * 100)
+        ? Math.round(
+            (correct / total) * 100
+          )
         : 0;
 
+
+    /*
+      SAVE ATTEMPT
+      This function was missing
+      in your old code.
+    */
 
     saveAttempt(
       total,
@@ -943,34 +1850,84 @@
     );
 
 
-    document.getElementById("quizScreen").style.display =
+    /*
+      Hide quiz
+    */
+
+    document.getElementById(
+      "quizScreen"
+    ).style.display =
       "none";
 
-    document.getElementById("resultScreen").style.display =
+
+    /*
+      Show result
+    */
+
+    document.getElementById(
+      "resultScreen"
+    ).style.display =
       "block";
 
 
-    document.getElementById("finalScore").textContent =
-      correct + "/" + total;
+    /*
+      Score
+    */
+
+    document.getElementById(
+      "finalScore"
+    ).textContent =
+      correct +
+      "/" +
+      total;
 
 
-    document.getElementById("finalAccuracy").textContent =
-      "Accuracy " + accuracy + "%";
+    /*
+      Accuracy
+    */
+
+    document.getElementById(
+      "finalAccuracy"
+    ).textContent =
+      "Accuracy " +
+      accuracy +
+      "%";
 
 
-    document.getElementById("correctCount").textContent =
+    /*
+      Stats
+    */
+
+    document.getElementById(
+      "correctCount"
+    ).textContent =
       correct;
 
 
-    document.getElementById("wrongCount").textContent =
+    document.getElementById(
+      "wrongCount"
+    ).textContent =
       wrong;
 
 
-    document.getElementById("skippedCount").textContent =
+    document.getElementById(
+      "skippedCount"
+    ).textContent =
       skipped;
 
 
-    showWrongQuestions(wrongList);
+    /*
+      Wrong questions
+    */
+
+    showWrongQuestions(
+      wrongList
+    );
+
+
+    /*
+      Scroll top
+    */
 
     window.scrollTo({
       top: 0,
@@ -980,19 +1937,162 @@
   }
 
 
-  /* =========================================
-     WRONG QUESTIONS
-  ========================================= */
+  /* =====================================================
+     SAVE ATTEMPT
+  ===================================================== */
 
-  function showWrongQuestions(list) {
+  function saveAttempt(
+    total,
+    correct,
+    wrong,
+    skipped
+  ) {
+
+    try {
+
+      const oldHistory =
+        getStorage(
+          HISTORY_KEY
+        );
+
+
+      let history = [];
+
+
+      /*
+        Read previous history
+      */
+
+      if (oldHistory) {
+
+        try {
+
+          history =
+            JSON.parse(
+              oldHistory
+            );
+
+
+          if (
+            !Array.isArray(
+              history
+            )
+          ) {
+
+            history = [];
+
+          }
+
+        } catch (error) {
+
+          history = [];
+
+        }
+
+      }
+
+
+      /*
+        Add newest attempt
+      */
+
+      const attempt = {
+
+        date:
+          new Date().toISOString(),
+
+        exam:
+          getStorage(
+            EXAM_KEY
+          ) || "",
+
+        language:
+          getStorage(
+            LANGUAGE_KEY
+          ) || "",
+
+        total:
+          total,
+
+        correct:
+          correct,
+
+        wrong:
+          wrong,
+
+        skipped:
+          skipped,
+
+        accuracy:
+          total > 0
+            ? Math.round(
+                (correct / total) * 100
+              )
+            : 0
+
+      };
+
+
+      history.unshift(
+        attempt
+      );
+
+
+      /*
+        Keep latest 30 attempts
+      */
+
+      history =
+        history.slice(
+          0,
+          30
+        );
+
+
+      setStorage(
+        HISTORY_KEY,
+        JSON.stringify(
+          history
+        )
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Could not save attempt:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /* =====================================================
+     SHOW WRONG QUESTIONS
+  ===================================================== */
+
+  function showWrongQuestions(
+    list
+  ) {
 
     const box =
-      document.getElementById("wrongQuestions");
+      document.getElementById(
+        "wrongQuestions"
+      );
+
 
     box.innerHTML = "";
 
 
-    if (list.length === 0) {
+    /*
+      Perfect score
+    */
+
+    if (
+      list.length === 0
+    ) {
 
       box.innerHTML = `
         <div class="empty-wrong">
@@ -1005,85 +2105,277 @@
     }
 
 
-    list.forEach(item => {
+    /*
+      Render mistakes
+    */
 
-      const q = item.question;
+    list.forEach(
+      item => {
 
-      const div = document.createElement("div");
-
-      div.className = "wrong-item";
-
-
-      const userText =
-        item.userAnswer
-          ? q.options[
-              ["A","B","C","D"].indexOf(
-                item.userAnswer
-              )
-            ]
-          : "Not answered";
+        const q =
+          item.question;
 
 
-      const correctIndex =
-        ["A","B","C","D"].indexOf(q.answer);
+        const div =
+          document.createElement(
+            "div"
+          );
 
 
-      const correctText =
-        q.options[correctIndex];
+        div.className =
+          "wrong-item";
 
 
-      div.innerHTML = `
+        /*
+          User answer text
+        */
 
-        <div class="wrong-q">
-          ${escapeHTML(q.question)}
-        </div>
-
-        <div class="answer-line">
-          Your answer:
-          <strong>
-            ${item.userAnswer || "Skipped"}
-          </strong>
-          ${item.userAnswer ? " • " + escapeHTML(userText) : ""}
-        </div>
-
-        <div class="answer-line correct-text">
-          Correct answer:
-          <strong>
-            ${q.answer}
-          </strong>
-          • ${escapeHTML(correctText)}
-        </div>
-
-        <div class="explanation">
-          <strong>Explanation:</strong><br>
-          ${escapeHTML(q.explanation)}
-        </div>
-
-      `;
+        let userText =
+          "Not answered";
 
 
-      box.appendChild(div);
+        if (
+          item.userAnswer
+        ) {
 
-    });
+          const userIndex =
+            [
+              "A",
+              "B",
+              "C",
+              "D"
+            ].indexOf(
+              item.userAnswer
+            );
+
+
+          if (
+            userIndex >= 0 &&
+            q.options &&
+            q.options[userIndex]
+          ) {
+
+            userText =
+              q.options[
+                userIndex
+              ];
+
+          }
+
+        }
+
+
+        /*
+          Correct answer text
+        */
+
+        const correctIndex =
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ].indexOf(
+            q.answer
+          );
+
+
+        const correctText =
+          q.options &&
+          q.options[
+            correctIndex
+          ]
+            ? q.options[
+                correctIndex
+              ]
+            : "Unavailable";
+
+
+        /*
+          Question
+        */
+
+        const questionDiv =
+          document.createElement(
+            "div"
+          );
+
+
+        questionDiv.className =
+          "wrong-q";
+
+
+        questionDiv.textContent =
+          q.question || "";
+
+
+        /*
+          Your answer
+        */
+
+        const userDiv =
+          document.createElement(
+            "div"
+          );
+
+
+        userDiv.className =
+          "answer-line";
+
+
+        userDiv.innerHTML =
+          "Your answer: <strong>" +
+          (
+            item.userAnswer ||
+            "Skipped"
+          ) +
+          "</strong>" +
+          (
+            item.userAnswer
+              ? " • " +
+                escapeHTML(
+                  userText
+                )
+              : ""
+          );
+
+
+        /*
+          Correct answer
+        */
+
+        const correctDiv =
+          document.createElement(
+            "div"
+          );
+
+
+        correctDiv.className =
+          "answer-line correct-text";
+
+
+        correctDiv.innerHTML =
+          "Correct answer: <strong>" +
+          escapeHTML(
+            q.answer || ""
+          ) +
+          "</strong> • " +
+          escapeHTML(
+            correctText
+          );
+
+
+        /*
+          Explanation
+        */
+
+        const explanationDiv =
+          document.createElement(
+            "div"
+          );
+
+
+        explanationDiv.className =
+          "explanation";
+
+
+        explanationDiv.innerHTML =
+          "<strong>Explanation:</strong><br>" +
+          escapeHTML(
+            q.explanation ||
+            "No explanation available."
+          );
+
+
+        /*
+          Add everything
+        */
+
+        div.appendChild(
+          questionDiv
+        );
+
+        div.appendChild(
+          userDiv
+        );
+
+        div.appendChild(
+          correctDiv
+        );
+
+        div.appendChild(
+          explanationDiv
+        );
+
+
+        box.appendChild(
+          div
+        );
+
+      }
+    );
 
   }
 
-function escapeHTML(text) {
-  return String(text)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-  /* =========================================
-  START
-  ========================================= */
+
+  /* =====================================================
+     RESTART
+  ===================================================== */
+
+  document.getElementById(
+    "restartBtn"
+  ).addEventListener(
+    "click",
+    () => {
+
+      location.reload();
+
+    }
+  );
+
+
+  /* =====================================================
+     ESCAPE HTML
+  ===================================================== */
+
+  function escapeHTML(text) {
+
+    return String(text)
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  /* =====================================================
+     START
+  ===================================================== */
 
   init();
 
 </script>
 
 </body>
-</html>
-    
