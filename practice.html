@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSC Practice | Quiz</title>
+
+  <style>
+    :root {
+      --bg: #08090d;
+      --card: #11131a;
+      --card2: #171a23;
+      --border: #272b36;
+      --text: #f5f7fb;
+      --muted: #9298a7;
+      --accent: #ff5a2e;
+      --accent2: #c6ff3d;
+      --danger: #ff4d67;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255,90,46,.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(198,255,61,.08), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .container {
+      width: min(900px, 92%);
+      margin: auto;
+      padding: 20px 0 50px;
+    }
+
+    /* HEADER */
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -.5px;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .exam-badge {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* PROGRESS */
+
+    .progress-card {
+      background: rgba(17,19,26,.9);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .progress-info span:last-child {
+      color: var(--muted);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      background: #242833;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: inherit;
+      transition: width .3s ease;
+    }
+
+    /* QUESTION */
+
+    .question-card {
+      background: rgba(17,19,26,.94);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .subject {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,90,46,.1);
+      border: 1px solid rgba(255,90,46,.25);
+      color: #ff8a6b;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .difficulty {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .question {
+      font-size: clamp(20px, 4vw, 28px);
+      line-height: 1.45;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    /* OPTIONS */
+
+    .options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--text);
+      padding: 16px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: .2s ease;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .option:hover {
+      border-color: #444b5b;
+      transform: translateY(-1px);
+    }
+
+    .option.selected {
+      border-color: var(--accent);
+      background: rgba(255,90,46,.1);
+    }
+
+    .option-letter {
+      min-width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: #222631;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .option.selected .option-letter {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* CONTROLS */
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--text);
+      padding: 13px 17px;
+      border-radius: 13px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .btn:hover {
+      border-color: #4a5060;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      flex: 1;
+    }
+
+    .btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .review-btn {
+      margin-top: 12px;
+      width: 100%;
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .review-btn.active {
+      color: var(--accent2);
+      border-color: var(--accent2);
+    }
+
+    /* LOADING */
+
+    .loading {
+      text-align: center;
+      padding: 70px 20px;
+      color: var(--muted);
+    }
+
+    .loader {
+      width: 38px;
+      height: 38px;
+      border: 3px solid #292d38;
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 18px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* RESULT */
+
+    .result {
+      display: none;
+    }
+
+    .result-header {
+      text-align: center;
+      padding: 30px 20px;
+      background: rgba(17,19,26,.95);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      margin-bottom: 16px;
+    }
+
+    .result-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .score {
+      font-size: 54px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .accuracy {
+      color: var(--accent2);
+      font-weight: 800;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .stat {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 8px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .stat small {
+      color: var(--muted);
+    }
+
+    .wrong-section {
+      background: rgba(17,19,26,.95);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 20px;
+    }
+
+    .wrong-section h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .wrong-item {
+      border: 1px solid var(--border);
+      background: var(--card2);
+      border-radius: 15px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .wrong-q {
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .answer-line {
+      font-size: 13px;
+      margin-top: 5px;
+      color: var(--muted);
+    }
+
+    .correct-text {
+      color: var(--accent2);
+    }
+
+    .explanation {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(198,255,61,.05);
+      border-left: 3px solid var(--accent2);
+      border-radius: 8px;
+      color: #cdd2dd;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .empty-wrong {
+      text-align: center;
+      padding: 25px;
+      color: var(--accent2);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: 94%;
+        padding-top: 14px;
+      }
+
+      .question-card {
+        padding: 18px;
+        border-radius: 18px;
+      }
+
+      .question {
+        font-size: 20px;
+      }
+
+      .option {
+        padding: 13px;
+      }
+
+      .controls {
+        flex-direction: row;
+      }
+
+      .stats {
+        gap: 7px;
+      }
+
+      .stat {
+        padding: 12px 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <div id="quizScreen">
+
+      <div class="topbar">
+        <div class="brand">SSC<span>Practice</span></div>
+        <div class="exam-badge" id="examBadge">Loading...</div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-info">
+          <span id="questionNumber">Question 1</span>
+          <span id="questionCount">0 / 0</span>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div id="loadingBox" class="loading">
+        <div class="loader"></div>
+        Loading your practice questions...
+      </div>
+
+      <section id="questionCard" class="question-card" style="display:none;">
+
+        <div class="question-meta">
+          <div class="subject" id="subjectName">Maths</div>
+          <div class="difficulty" id="difficulty">Easy</div>
+        </div>
+
+        <div class="question" id="questionText"></div>
+
+        <div class="options" id="options"></div>
+
+        <button class="btn review-btn" id="reviewBtn">
+          ☆ Mark for Review
+        </button>
+
+        <div class="controls">
+          <button class="btn" id="prevBtn">← Previous</button>
+          <button class="btn primary" id="nextBtn">Next →</button>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- RESULT -->
+
+    <section id="resultScreen" class="result">
+
+      <div class="result-header">
+
+        <div class="result-label">PRACTICE COMPLETE</div>
+
+        <div class="score" id="finalScore">0/0</div>
+
+        <div class="accuracy" id="finalAccuracy">
+          Accuracy 0%
+        </div>
+
+        <div class="stats">
+
+          <div class="stat">
+            <strong id="correctCount">0</strong>
+            <small>Correct</small>
+          </div>
+
+          <div class="stat">
+            <strong id="wrongCount">0</strong>
+            <small>Wrong</small>
+          </div>
+
+          <div class="stat">
+            <strong id="skippedCount">0</strong>
+            <small>Skipped</small>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="wrong-section">
+
+        <h2>❌ Review Your Mistakes</h2>
+
+        <div id="wrongQuestions"></div>
+
+        <button class="btn primary" onclick="location.reload()">
+          Practice Again
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+<script>
+
+  /* =========================================
+     SSC PRACTICE ENGINE
+  ========================================= */
+
+  let allQuestions = [];
+  let quizQuestions = [];
+
+  let currentIndex = 0;
+
+  let answers = [];
+  let reviewQuestions = [];
+
+  const EXAM_KEY = "ssc_exam";
+  const LANGUAGE_KEY = "ssc_language";
+  const SETUP_KEY = "ssc_setup_done";
+
+
+  /* =========================================
+     SAFE STORAGE
+  ========================================= */
+
+  function getStorage(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      return null;
+    }
+  }
+
+
+  /* =========================================
+     INITIALIZE
+  ========================================= */
+
+  async function init() {
+
+    const exam = getStorage(EXAM_KEY);
+    const language = getStorage(LANGUAGE_KEY);
+    const setupDone = getStorage(SETUP_KEY);
+
+    /*
+      Never silently choose an exam.
+      If setup is missing, send the user
+      back to the dashboard.
+    */
+
+    if (!exam || !language || setupDone !== "true") {
+      window.location.href = "practice-dashboard.html";
+      return;
+    }
+
+    document.getElementById("examBadge").textContent =
+      exam + " • " + language;
+
+    try {
+
+      const response = await fetch("questions.json");
+
+      if (!response.ok) {
+        throw new Error("Question file could not be loaded.");
+      }
+
+      allQuestions = await response.json();
+
+      prepareQuiz(exam);
+
+    } catch (error) {
+
+      document.getElementById("loadingBox").innerHTML = `
+        <div style="font-size:40px;margin-bottom:12px;">⚠️</div>
+        <strong>Question bank couldn't load.</strong>
+        <p style="margin-top:8px;">
+          Please check that questions.json exists in the same folder.
+        </p>
+      `;
+
+      console.error(error);
+    }
+  }
+
+
+  /* =========================================
+     PREPARE QUIZ
+  ========================================= */
+
+  function prepareQuiz(exam) {
+
+    const matching = allQuestions.filter(question => {
+
+      if (!Array.isArray(question.exam)) {
+        return false;
+      }
+
+      return question.exam.includes(exam);
+
+    });
+
+
+    if (matching.length === 0) {
+
+      document.getElementById("loadingBox").innerHTML = `
+        <div style="font-size:40px;margin-bottom:12px;">📚</div>
+        <strong>No questions available for ${exam} yet.</strong>
+        <p style="margin-top:8px;">
+          More questions will be added to the question bank.
+        </p>
+      `;
+
+      return;
+    }
+
+
+    /*
+      Shuffle question bank.
+      Fisher-Yates shuffle.
+    */
+
+    const shuffled = [...matching];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+
+      const j = Math.floor(Math.random() * (i + 1));
+
+      [shuffled[i], shuffled[j]] =
+        [shuffled[j], shuffled[i]];
+    }
+
+
+    /*
+      Never duplicate a question.
+      Current bank has 30 questions,
+      so we use all available questions
+      until the bank reaches 50+.
+    */
+
+    const quizSize = Math.min(50, shuffled.length);
+
+    quizQuestions = shuffled.slice(0, quizSize);
+
+
+    answers = new Array(quizQuestions.length).fill(null);
+
+    reviewQuestions =
+      new Array(quizQuestions.length).fill(false);
+
+
+    document.getElementById("loadingBox").style.display = "none";
+
+    document.getElementById("questionCard").style.display = "block";
+
+    showQuestion();
+  }
+
+
+  /* =========================================
+     SHOW QUESTION
+  ========================================= */
+
+  function showQuestion() {
+
+    const q = quizQuestions[currentIndex];
+
+    if (!q) {
+      finishQuiz();
+      return;
+    }
+
+
+    const total = quizQuestions.length;
+
+    document.getElementById("questionNumber").textContent =
+      "Question " + (currentIndex + 1);
+
+    document.getElementById("questionCount").textContent =
+      (currentIndex + 1) + " / " + total;
+
+
+    const progress =
+      ((currentIndex + 1) / total) * 100;
+
+    document.getElementById("progressFill").style.width =
+      progress + "%";
+
+
+    document.getElementById("subjectName").textContent =
+      q.subject;
+
+
+    document.getElementById("difficulty").textContent =
+      q.difficulty;
+
+
+    document.getElementById("questionText").textContent =
+      q.question;
+
+
+    const optionsBox =
+      document.getElementById("options");
+
+    optionsBox.innerHTML = "";
+
+
+    const letters = ["A", "B", "C", "D"];
+
+
+    q.options.forEach((option, index) => {
+
+      const button = document.createElement("button");
+
+      button.className = "option";
+
+
+      if (answers[currentIndex] === letters[index]) {
+        button.classList.add("selected");
+      }
+
+
+      button.innerHTML = `
+        <span class="option-letter">
+          ${letters[index]}
+        </span>
+
+        <span>
+          ${escapeHTML(option)}
+        </span>
+      `;
+
+
+      button.onclick = () => {
+
+        selectAnswer(letters[index]);
+
+      };
+
+
+      optionsBox.appendChild(button);
+
+    });
+
+
+    updateButtons();
+
+
+    const reviewBtn =
+      document.getElementById("reviewBtn");
+
+
+    if (reviewQuestions[currentIndex]) {
+
+      reviewBtn.classList.add("active");
+
+      reviewBtn.textContent =
+        "★ Marked for Review";
+
+    } else {
+
+      reviewBtn.classList.remove("active");
+
+      reviewBtn.textContent =
+        "☆ Mark for Review";
+    }
+
+  }
+
+
+  /* =========================================
+     SELECT ANSWER
+  ========================================= */
+
+  function selectAnswer(letter) {
+
+    answers[currentIndex] = letter;
+
+    showQuestion();
+
+  }
+
+
+  /* =========================================
+     NAVIGATION
+  ========================================= */
+
+  document.getElementById("prevBtn").onclick = () => {
+
+    if (currentIndex > 0) {
+
+      currentIndex--;
+
+      showQuestion();
+
+    }
+
+  };
+
+
+  document.getElementById("nextBtn").onclick = () => {
+
+    if (currentIndex < quizQuestions.length - 1) {
+
+      currentIndex++;
+
+      showQuestion();
+
+    } else {
+
+      finishQuiz();
+
+    }
+
+  };
+
+
+  /* =========================================
+     REVIEW
+  ========================================= */
+
+  document.getElementById("reviewBtn").onclick = () => {
+
+    reviewQuestions[currentIndex] =
+      !reviewQuestions[currentIndex];
+
+    showQuestion();
+
+  };
+
+
+  /* =========================================
+     BUTTON STATE
+  ========================================= */
+
+  function updateButtons() {
+
+    const prev =
+      document.getElementById("prevBtn");
+
+    const next =
+      document.getElementById("nextBtn");
+
+
+    prev.disabled =
+      currentIndex === 0;
+
+
+    if (currentIndex === quizQuestions.length - 1) {
+
+      next.textContent = "Finish ✓";
+
+    } else {
+
+      next.textContent = "Next →";
+
+    }
+
+  }
+
+
+  /* =========================================
+     FINISH QUIZ
+  ========================================= */
+
+  function finishQuiz() {
+
+    let correct = 0;
+
+    let wrong = 0;
+
+    let skipped = 0;
+
+
+    const wrongList = [];
+
+
+    quizQuestions.forEach((q, index) => {
+
+      const userAnswer = answers[index];
+
+
+      if (!userAnswer) {
+
+        skipped++;
+
+        wrongList.push({
+          question: q,
+          userAnswer: null
+        });
+
+        return;
+
+      }
+
+
+      if (userAnswer === q.answer) {
+
+        correct++;
+
+      } else {
+
+        wrong++;
+
+        wrongList.push({
+          question: q,
+          userAnswer: userAnswer
+        });
+
+      }
+
+    });
+
+
+    const total = quizQuestions.length;
+
+    const accuracy =
+      total > 0
+        ? Math.round((correct / total) * 100)
+        : 0;
+
+
+    saveAttempt(
+      total,
+      correct,
+      wrong,
+      skipped
+    );
+
+
+    document.getElementById("quizScreen").style.display =
+      "none";
+
+    document.getElementById("resultScreen").style.display =
+      "block";
+
+
+    document.getElementById("finalScore").textContent =
+      correct + "/" + total;
+
+
+    document.getElementById("finalAccuracy").textContent =
+      "Accuracy " + accuracy + "%";
+
+
+    document.getElementById("correctCount").textContent =
+      correct;
+
+
+    document.getElementById("wrongCount").textContent =
+      wrong;
+
+
+    document.getElementById("skippedCount").textContent =
+      skipped;
+
+
+    showWrongQuestions(wrongList);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  /* =========================================
+     WRONG QUESTIONS
+  ========================================= */
+
+  function showWrongQuestions(list) {
+
+    const box =
+      document.getElementById("wrongQuestions");
+
+    box.innerHTML = "";
+
+
+    if (list.length === 0) {
+
+      box.innerHTML = `
+        <div class="empty-wrong">
+          🎉 Perfect! No mistakes.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    list.forEach(item => {
+
+      const q = item.question;
+
+      const div = document.createElement("div");
+
+      div.className = "wrong-item";
+
+
+      const userText =
+        item.userAnswer
+          ? q.options[
+              ["A","B","C","D"].indexOf(
+                item.userAnswer
+              )
+            ]
+          : "Not answered";
+
+
+      const correctIndex =
+        ["A","B","C","D"].indexOf(q.answer);
+
+
+      const correctText =
+        q.options[correctIndex];
+
+
+      div.innerHTML = `
+
+        <div class="wrong-q">
+          ${escapeHTML(q.question)}
+        </div>
+
+        <div class="answer-line">
+          Your answer:
+          <strong>
+            ${item.userAnswer || "Skipped"}
+          </strong>
+          ${item.userAnswer ? " • " + escapeHTML(userText) : ""}
+        </div>
+
+        <div class="answer-line correct-text">
+          Correct answer:
+          <strong>
+            ${q.answer}
+          </strong>
+          • ${escapeHTML(correctText)}
+        </div>
+
+        <div class="explanation">
+          <strong>Explanation:</strong><br>
+          ${escapeHTML(q.explanation)}
+        </div>
+
+      `;
+
+
+      box.appendChild(div);
+
+    });
+
+  }
+
+
+  /* =========================================
+  START
+  ========================================= */
+
+  init();
+
+</script>
+
+</body>
+</html>
+    
