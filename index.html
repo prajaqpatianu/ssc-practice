@@ -1,1692 +1,496 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101b3c">
+<meta name="description" content="SIKSHORA is a modern competitive exam preparation platform. Learn. Practice. Progress.">
+<title>SIKSHORA | Learn. Practice. Progress.</title>
 
-<title>SSC Practice Hub | Free SSC Preparation</title>
-
-<meta name="description"
-content="SSC Practice Hub - Free SSC preparation platform for daily practice, PYQs, weak-topic revision and exam-style mocks.">
-
+<link rel="icon" type="image/png" href="assets/sikshora-icon.png">
+<link rel="apple-touch-icon" href="assets/sikshora-icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
 :root {
-  --bg-base: #0B0E14;
-  --text-main: #FFFFFF;
-  --text-muted: #A3B8CC;
-
-  --card-bg: rgba(255,255,255,0.025);
-  --border-color: rgba(255,255,255,0.08);
-  --border-hover: rgba(255,255,255,0.25);
-
-  --blob-opacity: 0.55;
-
-  --gradient-btn: linear-gradient(135deg,#FF6B6B,#FF8E53);
-  --gradient-text: linear-gradient(135deg,#4facfe 0%,#00f2fe 100%);
+  --navy:#101b3c;
+  --blue:#315efb;
+  --blue-dark:#2448d8;
+  --ink:#17213b;
+  --muted:#66718a;
+  --line:#e5eaf3;
+  --bg:#f7f9fd;
+  --card:#ffffff;
+  --soft:#eef2ff;
+  --shadow:0 14px 38px rgba(24,43,91,.07);
 }
-
-body.light-mode {
-  --bg-base: #F4F7FB;
-  --text-main: #0F172A;
-  --text-muted: #475569;
-
-  --card-bg: rgba(255,255,255,0.65);
-  --border-color: rgba(0,0,0,0.08);
-  --border-hover: rgba(0,0,0,0.20);
-
-  --blob-opacity: 0.25;
+body.dark {
+  --navy:#edf1ff;
+  --ink:#edf1ff;
+  --muted:#aab5ce;
+  --line:#303b59;
+  --bg:#0c1328;
+  --card:#151f3b;
+  --soft:#202c4c;
+  --shadow:0 14px 38px rgba(0,0,0,.2);
 }
-
-* {
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
   margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-html {
-  scroll-behavior:smooth;
-}
-
-body {
-  font-family:'Inter',sans-serif;
-  background:var(--bg-base);
-  color:var(--text-main);
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
   line-height:1.6;
-  overflow-x:hidden;
-  transition:background-color .4s ease,color .4s ease;
+  transition:background .25s,color .25s;
 }
-
-/* ================= BACKGROUND ================= */
-
-.aurora-bg {
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  background:var(--bg-base);
-  overflow:hidden;
-  transition:background-color .4s ease;
+a{text-decoration:none;color:inherit}
+button{font:inherit}
+.container{width:min(1120px,92%);margin:auto}
+header{
+  position:sticky;top:0;z-index:100;
+  background:var(--card);
+  border-bottom:1px solid var(--line);
 }
-
-.aurora-blob {
-  position:absolute;
-  border-radius:50%;
-  filter:blur(140px);
-  opacity:var(--blob-opacity);
-  animation:drift 22s infinite alternate ease-in-out;
-  will-change:transform;
+.nav{
+  min-height:76px;display:flex;align-items:center;
+  justify-content:space-between;gap:20px;
 }
-
-.blob-1 {
-  top:-10%;
-  left:-10%;
-  width:50vw;
-  height:50vw;
-  background:#5D26C1;
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:23px;color:var(--navy)}
+.brand img{width:42px;height:42px;object-fit:contain}
+.nav-links{display:flex;align-items:center;gap:25px;font-size:14px;font-weight:600}
+.nav-links a:hover{color:var(--blue)}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.theme-btn,.menu-btn{
+  border:1px solid var(--line);background:var(--card);
+  color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;
 }
-
-.blob-2 {
-  right:-10%;
-  bottom:-20%;
-  width:60vw;
-  height:60vw;
-  background:#00A8FF;
-  animation-delay:-5s;
+.menu-btn{display:none}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--blue);color:white;padding:13px 22px;
+  border-radius:11px;font-weight:700;border:0;cursor:pointer;
+  transition:.2s;
 }
-
-.blob-3 {
-  top:40%;
-  left:40%;
-  width:40vw;
-  height:40vw;
-  background:#FF3366;
-  opacity:calc(var(--blob-opacity) - .2);
-  animation-delay:-10s;
+.btn:hover{background:var(--blue-dark);transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--blue);border:1px solid var(--blue)}
+.btn-outline:hover{color:white}
+.hero{padding:88px 0 78px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:45px;align-items:center}
+.eyebrow{
+  display:inline-block;background:var(--soft);color:var(--blue);
+  padding:7px 13px;border-radius:30px;font-size:12px;
+  font-weight:800;letter-spacing:.6px;
 }
-
-@keyframes drift {
-  0% {
-    transform:translate(0,0) scale(1);
+h1{font-size:clamp(38px,5.5vw,62px);line-height:1.12;margin:20px 0}
+h1 span{color:var(--blue)}
+.hero p{color:var(--muted);font-size:17px;max-width:570px}
+.hero-actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:28px}
+.hero-visual{
+  min-height:340px;border-radius:28px;padding:30px;
+  background:linear-gradient(145deg,#101b3c,#294baf);
+  color:white;display:flex;flex-direction:column;
+  justify-content:center;position:relative;overflow:hidden;
+  box-shadow:0 25px 60px rgba(30,60,150,.2);
+}
+.hero-visual:before,.hero-visual:after{
+  content:"";position:absolute;border:1px solid rgba(255,255,255,.15);
+  border-radius:50%;width:280px;height:280px;right:-100px;top:-100px;
+}
+.hero-visual:after{width:190px;height:190px;right:-55px;top:-55px}
+.visual-mark{font-size:64px;font-weight:800;line-height:1;color:#fff}
+.visual-tag{font-size:13px;letter-spacing:2px;color:#b9caff;margin-top:12px}
+.visual-line{height:4px;width:65px;background:#6f91ff;border-radius:5px;margin:24px 0}
+.visual-copy{font-size:23px;font-weight:700;max-width:300px;line-height:1.35}
+section{padding:75px 0}
+.section-head{text-align:center;max-width:700px;margin:0 auto 38px}
+.section-head h2{font-size:clamp(27px,4vw,38px);line-height:1.2;margin:0 0 12px}
+.section-head p{color:var(--muted);margin:0}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feature,.exam-card,.info-card,.faq-item{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:17px;padding:24px;box-shadow:var(--shadow);
+}
+.feature-icon{
+  width:48px;height:48px;display:grid;place-items:center;
+  border-radius:13px;background:var(--soft);font-size:23px;margin-bottom:15px;
+}
+.feature h3,.exam-card h3{margin:0 0 8px;font-size:17px}
+.feature p,.exam-card p,.info-card p{margin:0;color:var(--muted);font-size:14px}
+.exam-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.exam-card{transition:.2s}
+.exam-card:hover{transform:translateY(-4px);border-color:#b9c8ff}
+.exam-icon{font-size:27px;margin-bottom:12px}
+.exam-label{
+  display:inline-block;margin-top:15px;font-size:11px;font-weight:700;
+  color:var(--blue);background:var(--soft);padding:5px 9px;border-radius:20px;
+}
+.cta-band{
+  background:linear-gradient(120deg,#101b3c,#315efb);
+  color:white;border-radius:24px;padding:48px;
+  display:flex;align-items:center;justify-content:space-between;gap:25px;
+}
+.cta-band h2{font-size:30px;line-height:1.2;margin:0 0 10px}
+.cta-band p{color:#d4ddff;margin:0}
+.cta-band .btn{background:white;color:#2448d8;white-space:nowrap}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.info-card h3{margin:0 0 10px}
+.telegram-card{
+  background:var(--soft);border:1px solid var(--line);
+  border-radius:20px;padding:30px;text-align:center;
+}
+.telegram-card h2{margin:0 0 10px}
+.telegram-card p{color:var(--muted);margin:0 auto 20px;max-width:580px}
+.faq-list{max-width:800px;margin:auto;display:grid;gap:12px}
+.faq-item{padding:0;overflow:hidden}
+.faq-item summary{padding:18px 20px;cursor:pointer;font-weight:700}
+.faq-item p{padding:0 20px 18px;margin:0;color:var(--muted);font-size:14px}
+footer{background:#0d1733;color:#dce4ff;padding:42px 0 22px}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:30px}
+footer h3,footer h4{color:white;margin-top:0}
+footer p,footer a{color:#aebce0;font-size:13px}
+footer a:hover{color:white}
+.footer-links{display:grid;gap:8px}
+.copyright{border-top:1px solid #28365a;margin-top:30px;padding-top:18px;text-align:center;color:#91a2ce;font-size:12px}
+@media(max-width:800px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero{padding:60px 0}
+  .hero-visual{min-height:260px}
+  .features{grid-template-columns:repeat(2,1fr)}
+  .exam-grid{grid-template-columns:repeat(2,1fr)}
+  .cta-band{padding:32px;flex-direction:column;align-items:flex-start}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .nav{min-height:66px}
+  .brand{font-size:20px}
+  .brand img{width:36px;height:36px}
+  .menu-btn{display:block}
+  .nav-links{
+    display:none;position:absolute;top:66px;left:0;right:0;
+    padding:20px 5%;background:var(--card);
+    border-bottom:1px solid var(--line);
+    flex-direction:column;align-items:flex-start;gap:17px;
   }
-
-  100% {
-    transform:translate(80px,40px) scale(1.15);
-  }
+  .nav-links.open{display:flex}
+  .theme-btn{padding:8px 10px}
+  .hero{padding:48px 0}
+  .hero p{font-size:15px}
+  section{padding:55px 0}
+  .features,.exam-grid,.info-grid,.footer-grid{grid-template-columns:1fr}
+  .feature,.exam-card{padding:21px}
+  .cta-band h2{font-size:25px}
+  .cta-band{padding:27px}
 }
-
-/* ================= HEADER ================= */
-
-header {
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  z-index:100;
-
-  padding:18px 0;
-
-  background:rgba(11,14,20,.18);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-
-  border-bottom:1px solid var(--border-color);
-
-  transition:border-color .4s ease,background .4s ease;
-}
-
-body.light-mode header {
-  background:rgba(244,247,251,.55);
-}
-
-.nav {
-  max-width:1120px;
-  margin:auto;
-  padding:0 24px;
-
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.logo {
-  font-family:'Space Grotesk',sans-serif;
-  font-weight:800;
-  font-size:22px;
-  letter-spacing:-.5px;
-}
-
-.logo span {
-  background:var(--gradient-text);
-  -webkit-background-clip:text;
-  color:transparent;
-}
-
-.nav-right {
-  display:flex;
-  align-items:center;
-}
-
-nav.links {
-  display:flex;
-  align-items:center;
-}
-
-nav.links a {
-  color:var(--text-muted);
-  text-decoration:none;
-  margin-left:32px;
-
-  font-size:13px;
-  font-weight:600;
-
-  text-transform:uppercase;
-  letter-spacing:.5px;
-
-  transition:color .2s ease;
-}
-
-nav.links a:hover {
-  color:var(--text-main);
-}
-
-.theme-toggle {
-  background:var(--card-bg);
-  border:1px solid var(--border-color);
-
-  border-radius:50%;
-
-  width:40px;
-  height:40px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  margin-left:28px;
-
-  cursor:pointer;
-  font-size:18px;
-
-  transition:all .3s ease;
-}
-
-.theme-toggle:hover {
-  transform:scale(1.1);
-}
-
-/* MOBILE MENU */
-
-.menu-toggle {
-  display:none;
-
-  background:var(--card-bg);
-  border:1px solid var(--border-color);
-
-  color:var(--text-main);
-
-  width:40px;
-  height:40px;
-
-  border-radius:10px;
-
-  font-size:20px;
-  cursor:pointer;
-}
-
-.mobile-menu {
-  display:none;
-
-  position:absolute;
-  top:76px;
-  left:20px;
-  right:20px;
-
-  padding:15px;
-
-  background:rgba(15,20,30,.92);
-  backdrop-filter:blur(20px);
-
-  border:1px solid var(--border-color);
-  border-radius:18px;
-}
-
-body.light-mode .mobile-menu {
-  background:rgba(255,255,255,.94);
-}
-
-.mobile-menu a {
-  display:block;
-
-  padding:13px 10px;
-
-  color:var(--text-muted);
-  text-decoration:none;
-
-  font-size:14px;
-  font-weight:600;
-}
-
-.mobile-menu a:hover {
-  color:var(--text-main);
-}
-
-.mobile-menu.active {
-  display:block;
-}
-
-/* ================= MAIN ================= */
-
-main {
-  position:relative;
-  padding-top:130px;
-}
-
-section {
-  max-width:1120px;
-  margin:auto;
-  padding:80px 24px;
-}
-
-/* ================= HERO ================= */
-
-.hero {
-  text-align:center;
-  padding-top:50px;
-  padding-bottom:40px;
-}
-
-.badge {
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-
-  padding:8px 18px;
-
-  border-radius:100px;
-
-  font-size:13px;
-  font-weight:600;
-
-  text-transform:uppercase;
-  letter-spacing:.5px;
-
-  background:var(--card-bg);
-  border:1px solid var(--border-color);
-
-  margin-bottom:30px;
-}
-
-.badge .dot {
-  width:8px;
-  height:8px;
-
-  background:#00F2FE;
-
-  border-radius:50%;
-
-  box-shadow:0 0 12px #00F2FE;
-
-  animation:pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%,100% {
-    opacity:1;
-  }
-
-  50% {
-    opacity:.4;
-  }
-}
-
-.hero h1 {
-  font-family:'Space Grotesk',sans-serif;
-
-  font-weight:800;
-
-  font-size:clamp(42px,8vw,76px);
-
-  line-height:1.05;
-
-  letter-spacing:-1.5px;
-}
-
-.hero h1 .highlight {
-  background:linear-gradient(to right,#FF8E53,#FF6B6B);
-  -webkit-background-clip:text;
-  color:transparent;
-}
-
-.hero-text {
-  margin:28px auto 0;
-
-  max-width:650px;
-
-  color:var(--text-muted);
-
-  font-size:18px;
-}
-
-.live-bar {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  gap:14px;
-
-  margin-top:25px;
-
-  flex-wrap:wrap;
-}
-
-.live-item {
-  display:flex;
-  align-items:center;
-  gap:8px;
-
-  font-size:13px;
-  font-weight:600;
-
-  color:var(--text-muted);
-
-  background:var(--card-bg);
-
-  padding:7px 14px;
-
-  border-radius:100px;
-
-  border:1px solid var(--border-color);
-
-  backdrop-filter:blur(10px);
-}
-
-.live-item .green-dot {
-  width:8px;
-  height:8px;
-
-  background:#10B981;
-
-  border-radius:50%;
-
-  animation:pulse 1.5s infinite;
-}
-
-/* ================= BUTTONS ================= */
-
-.buttons {
-  margin-top:45px;
-
-  display:flex;
-  justify-content:center;
-
-  gap:20px;
-
-  flex-wrap:wrap;
-}
-
-.btn {
-  display:inline-block;
-
-  padding:16px 36px;
-
-  border-radius:14px;
-
-  text-decoration:none;
-
-  font-weight:600;
-  font-size:16px;
-
-  transition:all .3s cubic-bezier(.16,1,.3,1);
-}
-
-.primary {
-  background:var(--gradient-btn);
-  color:#fff;
-
-  box-shadow:0 8px 25px rgba(255,107,107,.25);
-}
-
-.primary:hover {
-  transform:translateY(-4px);
-
-  box-shadow:0 15px 35px rgba(255,107,107,.4);
-}
-
-.secondary {
-  background:var(--card-bg);
-  color:var(--text-main);
-
-  border:1px solid var(--border-color);
-}
-
-.secondary:hover {
-  transform:translateY(-4px);
-
-  border-color:var(--border-hover);
-}
-
-/* ================= STATS ================= */
-
-.stats {
-  margin-top:90px;
-
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-
-  gap:1px;
-
-  background:var(--border-color);
-
-  border-radius:24px;
-
-  overflow:hidden;
-
-  border:1px solid var(--border-color);
-}
-
-.stat {
-  background:var(--card-bg);
-
-  backdrop-filter:blur(12px);
-
-  padding:35px 20px;
-
-  text-align:center;
-
-  transition:background .3s ease;
-}
-
-.stat:hover {
-  background:var(--border-color);
-}
-
-.stat .num {
-  font-family:'Space Grotesk',sans-serif;
-
-  font-weight:800;
-
-  font-size:34px;
-
-  background:var(--gradient-text);
-
-  -webkit-background-clip:text;
-
-  color:transparent;
-}
-
-.stat .label {
-  font-size:13px;
-
-  color:var(--text-muted);
-
-  margin-top:8px;
-
-  font-weight:600;
-
-  text-transform:uppercase;
-
-  letter-spacing:1px;
-}
-
-/* ================= SECTION TITLE ================= */
-
-.section-title {
-  text-align:center;
-
-  margin-bottom:60px;
-}
-
-.section-title h2 {
-  font-family:'Space Grotesk',sans-serif;
-
-  font-weight:800;
-
-  font-size:40px;
-
-  margin-bottom:16px;
-
-  letter-spacing:-1px;
-}
-
-.section-title p {
-  color:var(--text-muted);
-
-  font-size:18px;
-
-  max-width:550px;
-
-  margin:auto;
-}
-
-/* ================= FEATURES ================= */
-
-.grid {
-  display:grid;
-
-  grid-template-columns:repeat(3,1fr);
-
-  gap:24px;
-}
-
-.card {
-  background:var(--card-bg);
-
-  border:1px solid var(--border-color);
-
-  border-radius:24px;
-
-  padding:45px 32px;
-
-  transition:all .4s cubic-bezier(.16,1,.3,1);
-
-  backdrop-filter:blur(12px);
-}
-
-.card:hover {
-  border-color:var(--border-hover);
-
-  transform:translateY(-10px);
-
-  box-shadow:0 20px 40px rgba(0,0,0,.1);
-}
-
-.card .icon-box {
-  width:54px;
-  height:54px;
-
-  border-radius:16px;
-
-  margin-bottom:28px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:26px;
-
-  background:rgba(128,128,128,.1);
-
-  border:1px solid var(--border-color);
-}
-
-.card h3 {
-  font-family:'Space Grotesk',sans-serif;
-
-  font-size:22px;
-
-  font-weight:700;
-
-  margin-bottom:14px;
-}
-
-.card p {
-  color:var(--text-muted);
-
-  font-size:15px;
-
-  line-height:1.7;
-}
-
-/* ================= SSC PATTERN ================= */
-
-.pattern-box {
-  text-align:center;
-
-  padding:60px 35px;
-
-  border-radius:30px;
-
-  background:var(--card-bg);
-
-  border:1px solid var(--border-color);
-
-  backdrop-filter:blur(12px);
-}
-
-.pattern-box h2 {
-  font-family:'Space Grotesk',sans-serif;
-
-  font-size:36px;
-
-  margin-bottom:16px;
-}
-
-.pattern-box p {
-  color:var(--text-muted);
-
-  max-width:650px;
-
-  margin:0 auto 30px;
-}
-
-.pattern-tags {
-  display:flex;
-
-  justify-content:center;
-
-  flex-wrap:wrap;
-
-  gap:12px;
-}
-
-.pattern-tag {
-  padding:9px 16px;
-
-  border-radius:100px;
-
-  background:rgba(128,128,128,.1);
-
-  border:1px solid var(--border-color);
-
-  font-size:13px;
-
-  font-weight:600;
-}
-
-/* ================= TELEGRAM ================= */
-
-.telegram-box {
-  text-align:center;
-
-  padding:70px 40px;
-
-  border-radius:30px;
-
-  background:
-  linear-gradient(
-    135deg,
-    rgba(79,172,254,.1),
-    rgba(0,242,254,.05)
-  );
-
-  border:1px solid rgba(0,242,254,.2);
-}
-
-.telegram-box h2 {
-  font-family:'Space Grotesk',sans-serif;
-
-  font-size:36px;
-
-  margin-bottom:18px;
-
-  letter-spacing:-1px;
-}
-
-.telegram-box p {
-  font-size:17px;
-
-  color:var(--text-muted);
-
-  max-width:550px;
-
-  margin:0 auto 35px;
-}
-
-/* ================= FAQ ================= */
-
-.faq-container {
-  max-width:800px;
-
-  margin:auto;
-
-  display:flex;
-
-  flex-direction:column;
-
-  gap:16px;
-}
-
-.faq-item {
-  background:var(--card-bg);
-
-  border:1px solid var(--border-color);
-
-  border-radius:16px;
-
-  overflow:hidden;
-
-  backdrop-filter:blur(10px);
-
-  transition:all .3s ease;
-}
-
-.faq-item:hover {
-  border-color:var(--border-hover);
-}
-
-.faq-item summary {
-  padding:24px;
-
-  font-weight:600;
-
-  font-size:18px;
-
-  cursor:pointer;
-
-  list-style:none;
-
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-}
-
-.faq-item summary::-webkit-details-marker {
-  display:none;
-}
-
-.faq-item summary::after {
-  content:'+';
-
-  font-size:24px;
-
-  color:var(--text-muted);
-
-  transition:transform .3s ease;
-}
-
-.faq-item[open] summary::after {
-  transform:rotate(45deg);
-}
-
-.faq-item p {
-  padding:0 24px 24px;
-
-  color:var(--text-muted);
-
-  font-size:16px;
-
-  line-height:1.6;
-}
-
-/* ================= ABOUT ================= */
-
-.about-card {
-  display:flex;
-
-  align-items:stretch;
-
-  gap:40px;
-
-  background:var(--card-bg);
-
-  padding:45px;
-
-  border-radius:30px;
-
-  border:1px solid var(--border-color);
-
-  backdrop-filter:blur(10px);
-}
-
-.avatar {
-  width:100px;
-  height:100px;
-
-  border-radius:24px;
-
-  flex-shrink:0;
-
-  background:var(--gradient-btn);
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  font-family:'Space Grotesk',sans-serif;
-
-  font-size:40px;
-
-  font-weight:800;
-
-  color:#fff;
-
-  box-shadow:0 15px 30px rgba(255,107,107,.3);
-}
-
-.about-card h3 {
-  font-family:'Space Grotesk',sans-serif;
-
-  font-size:28px;
-
-  margin-bottom:6px;
-}
-
-.about-card .role {
-  color:#00F2FE;
-
-  font-size:13px;
-
-  font-weight:700;
-
-  margin-bottom:20px;
-
-  text-transform:uppercase;
-}
-
-.about-card p {
-  color:var(--text-muted);
-
-  margin-bottom:14px;
-
-  font-size:16px;
-
-  line-height:1.7;
-}
-
-.tags {
-  display:flex;
-
-  gap:10px;
-
-  margin-top:20px;
-
-  flex-wrap:wrap;
-}
-
-.tag {
-  background:rgba(128,128,128,.1);
-
-  padding:6px 14px;
-
-  border-radius:100px;
-
-  font-size:12px;
-
-  font-weight:600;
-
-  border:1px solid var(--border-color);
-}
-
-/* ================= FOOTER ================= */
-
-footer {
-  text-align:center;
-
-  padding:45px 20px;
-
-  color:var(--text-muted);
-
-  font-size:14px;
-
-  margin-top:50px;
-
-  border-top:1px solid var(--border-color);
-}
-
-footer span {
-  color:#FF6B6B;
-
-  font-weight:600;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media (max-width:900px) {
-
-  .grid {
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  nav.links a {
-    display:none;
-  }
-
-  .menu-toggle {
-    display:block;
-  }
-
-  .theme-toggle {
-    margin-left:10px;
-  }
-
-}
-
-@media (max-width:640px) {
-
-  section {
-    padding:65px 20px;
-  }
-
-  main {
-    padding-top:110px;
-  }
-
-  .hero {
-    padding-top:35px;
-  }
-
-  .hero-text {
-    font-size:16px;
-  }
-
-  .buttons {
-    gap:12px;
-  }
-
-  .btn {
-    width:100%;
-    padding:15px 20px;
-  }
-
-  .stats {
-    grid-template-columns:repeat(2,1fr);
-
-    margin-top:65px;
-  }
-
-  .stat {
-    padding:28px 12px;
-  }
-
-  .stat .num {
-    font-size:28px;
-  }
-
-  .grid {
-    grid-template-columns:1fr;
-  }
-
-  .section-title h2 {
-    font-size:32px;
-  }
-
-  .telegram-box {
-    padding:55px 22px;
-  }
-
-  .telegram-box h2 {
-    font-size:30px;
-  }
-
-  .pattern-box {
-    padding:50px 22px;
-  }
-
-  .pattern-box h2 {
-    font-size:30px;
-  }
-
-  .about-card {
-    flex-direction:column;
-
-    text-align:center;
-
-    align-items:center;
-
-    gap:24px;
-
-    padding:35px 24px;
-  }
-
-  .tags {
-    justify-content:center;
-  }
-
-}
-
 </style>
 </head>
 
 <body>
-
-<!-- BACKGROUND -->
-
-<div class="aurora-bg">
-
-  <div class="aurora-blob blob-1"></div>
-  <div class="aurora-blob blob-2"></div>
-  <div class="aurora-blob blob-3"></div>
-
-</div>
-
-
-<!-- HEADER -->
-
 <header>
+  <div class="container nav">
+    <a class="brand" href="#home">
+      <img src="assets/sikshora-logo.png" alt="SIKSHORA logo">
+      <span>SIKSHORA</span>
+    </a>
 
-  <div class="nav">
+    <nav class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#exams">Exams</a>
+      <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
+      <a href="#telegram">Telegram</a>
+    </nav>
 
-    <div class="logo">
-      SSC <span>Hub</span>
+    <div class="nav-actions">
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">☾</button>
+      <button class="menu-btn" id="menuToggle" aria-label="Open menu">☰</button>
     </div>
-
-    <div class="nav-right">
-
-      <nav class="links">
-
-        <a href="#features">Features</a>
-        <a href="#pattern">SSC Pattern</a>
-        <a href="#faq">FAQ</a>
-        <a href="#about">About</a>
-
-      </nav>
-
-      <button
-        class="theme-toggle"
-        id="themeToggle"
-        title="Toggle Light/Dark Mode"
-        aria-label="Toggle theme">
-        ☀️
-      </button>
-
-      <button
-        class="menu-toggle"
-        id="menuToggle"
-        aria-label="Open menu">
-        ☰
-      </button>
-
-    </div>
-
   </div>
-
-
-  <div class="mobile-menu" id="mobileMenu">
-
-    <a href="#features">Features</a>
-    <a href="#pattern">SSC Pattern</a>
-    <a href="#faq">FAQ</a>
-    <a href="#about">About</a>
-
-  </div>
-
 </header>
 
-
 <main>
-
-<!-- ================= HERO ================= -->
-
-<section class="hero">
-
-  <div class="badge">
-
-    <div class="dot"></div>
-
-    Free SSC Preparation
-
-  </div>
-
-
-  <h1>
-
-    Practice Like The Exam
-    <br>
-
-    Is <span class="highlight">Tomorrow</span>
-
-  </h1>
-
-
-  <p class="hero-text">
-
-    A focused practice platform for SSC aspirants.
-    Solve daily questions, practice PYQs, identify weak topics,
-    and improve consistently.
-
-  </p>
-
-
-  <div class="live-bar">
-
-    <div class="live-item">
-
-      <div class="green-dot"></div>
-
-      Built for SSC Aspirants
-
-    </div>
-
-    <div class="live-item">
-
-      🔥 Build Your Daily Streak
-
-    </div>
-
-  </div>
-
-
-  <div class="buttons">
-
-    <a
-      href="practice-dashboard.html"
-      class="btn primary">
-
-      Start Practicing
-
-    </a>
-
-
-    <a
-      href="https://t.me/anu_ssc_bot"
-      class="btn secondary"
-      target="_blank"
-      rel="noopener">
-
-      Open Telegram Bot
-
-    </a>
-
-  </div>
-
-
-  <div class="stats">
-
-    <div class="stat">
-
-      <div class="num">50+</div>
-
-      <div class="label">
-        Daily Questions
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">YOUR PREPARATION STARTS HERE</span>
+      <h1>Learn Better.<br><span>Prepare Smarter.</span></h1>
+      <p>
+        Build your preparation with focused practice, useful learning tools
+        and a clear path towards your competitive examination goals.
+      </p>
+      <div class="hero-actions">
+        <a class="btn" href="practice-dashboard.html">Start Practicing →</a>
+        <a class="btn btn-outline" href="#exams">Explore Exams</a>
       </div>
-
     </div>
 
-
-    <div class="stat">
-
-      <div class="num">04</div>
-
-      <div class="label">
-        Core Subjects
-      </div>
-
+    <div class="hero-visual">
+      <div class="visual-mark">S.</div>
+      <div class="visual-tag">LEARN. PRACTICE. PROGRESS.</div>
+      <div class="visual-line"></div>
+      <div class="visual-copy">Small steps today.<br>Stronger preparation tomorrow.</div>
     </div>
-
-
-    <div class="stat">
-
-      <div class="num">PYQ</div>
-
-      <div class="label">
-        Past Questions
-      </div>
-
-    </div>
-
-
-    <div class="stat">
-
-      <div class="num">₹0</div>
-
-      <div class="label">
-        Free to Use
-      </div>
-
-    </div>
-
   </div>
-
 </section>
-
-
-<!-- ================= FEATURES ================= -->
 
 <section id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>A focused way to prepare</h2>
+      <p>Simple tools and a clean learning experience to support your exam preparation.</p>
+    </div>
 
-  <div class="section-title">
-
-    <h2>
-      Everything You Need
-    </h2>
-
-    <p>
-      Built around consistent practice, smart revision,
-      and understanding where you're actually losing marks.
-    </p>
-
+    <div class="features">
+      <article class="feature">
+        <div class="feature-icon">🎯</div>
+        <h3>Focused Practice</h3>
+        <p>Work through available question sets and build familiarity with exam-style questions.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon">📊</div>
+        <h3>Performance Review</h3>
+        <p>Review your attempts, accuracy and mistakes where result tracking is available.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon">📚</div>
+        <h3>Subject-wise Learning</h3>
+        <p>Question sets are intended to be organised by subjects and topics as the question bank expands.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon">🔁</div>
+        <h3>Smart Revision</h3>
+        <p>Smart revision is planned to help revisit questions and topics that need more attention.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon">🌐</div>
+        <h3>Language Support</h3>
+        <p>Hindi and English support is being developed. Actual language options depend on the translations available in each question set.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon">📱</div>
+        <h3>Mobile Friendly</h3>
+        <p>Use a responsive interface designed to work across mobile, tablet and desktop screens.</p>
+      </article>
+    </div>
   </div>
-
-
-  <div class="grid">
-
-    <div class="card">
-
-      <div class="icon-box">
-        📚
-      </div>
-
-      <h3>
-        50 Questions a Day
-      </h3>
-
-      <p>
-        Practice Maths, Reasoning, English and GK/GA
-        every day with a fresh question set.
-      </p>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="icon-box">
-        📜
-      </div>
-
-      <h3>
-        Previous Year Questions
-      </h3>
-
-      <p>
-        Practice genuine SSC PYQs and understand
-        the patterns that repeatedly appear in exams.
-      </p>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="icon-box">
-        🧠
-      </div>
-
-      <h3>
-        Smart Revision
-      </h3>
-
-      <p>
-        Questions you struggle with can come back
-        for revision instead of simply disappearing.
-      </p>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="icon-box">
-        🔥
-      </div>
-
-      <h3>
-        Daily Streaks
-      </h3>
-
-      <p>
-        Keep your preparation consistent by building
-        a daily practice habit.
-      </p>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="icon-box">
-        📈
-      </div>
-
-      <h3>
-        Performance Tracking
-      </h3>
-
-      <p>
-        Track accuracy, attempts, mistakes and weak
-        areas so you know what needs more work.
-      </p>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="icon-box">
-        ⏱️
-      </div>
-
-      <h3>
-        Timed Mock Tests
-      </h3>
-
-      <p>
-        Practice under exam-style time pressure and
-        review your performance after submission.
-      </p>
-
-    </div>
-
-  </div>
-
 </section>
 
-
-<!-- ================= SSC PATTERN ================= -->
-
-<section id="pattern">
-
-  <div class="pattern-box">
-
-    <h2>
-      Built Around SSC Patterns
-    </h2>
-
-    <p>
-      The platform is being developed around major SSC
-      exams, their question trends, PYQs and topic-wise
-      practice requirements.
-    </p>
-
-
-    <div class="pattern-tags">
-
-      <span class="pattern-tag">
-        SSC CHSL
-      </span>
-
-      <span class="pattern-tag">
-        SSC CGL
-      </span>
-
-      <span class="pattern-tag">
-        SSC MTS
-      </span>
-
-      <span class="pattern-tag">
-        SSC CPO
-      </span>
-
-      <span class="pattern-tag">
-        PYQs
-      </span>
-
-      <span class="pattern-tag">
-        Topic Practice
-      </span>
-
-      <span class="pattern-tag">
-        Mock Tests
-      </span>
-
+<section id="exams">
+  <div class="container">
+    <div class="section-head">
+      <h2>Explore examination categories</h2>
+      <p>SIKSHORA is being built around major competitive examination paths.</p>
     </div>
 
-  </div>
+    <div class="exam-grid">
+      <article class="exam-card">
+        <div class="exam-icon">🏛️</div>
+        <h3>SSC Examinations</h3>
+        <p>Preparation paths such as CGL, CHSL, MTS, GD, CPO and Stenographer, with question coverage expanding over time.</p>
+        <span class="exam-label">STAFF SELECTION COMMISSION</span>
+      </article>
 
+      <article class="exam-card">
+        <div class="exam-icon">🚆</div>
+        <h3>Railway Examinations</h3>
+        <p>Railway recruitment paths such as NTPC, Group D, ALP and Technician.</p>
+        <span class="exam-label">RAILWAY RECRUITMENT</span>
+      </article>
+
+      <article class="exam-card">
+        <div class="exam-icon">🏦</div>
+        <h3>Banking Examinations</h3>
+        <p>Banking exam paths such as IBPS, SBI and other public-sector bank recruitment exams.</p>
+        <span class="exam-label">BANKING</span>
+      </article>
+
+      <article class="exam-card">
+        <div class="exam-icon">📜</div>
+        <h3>State Government Exams</h3>
+        <p>State-level recruitment examinations, with exam-wise information and preparation resources planned.</p>
+        <span class="exam-label">STATE RECRUITMENT</span>
+      </article>
+
+      <article class="exam-card">
+        <div class="exam-icon">🇮🇳</div>
+        <h3>Civil Services</h3>
+        <p>UPSC and state civil services preparation categories, with structured resources planned for future expansion.</p>
+        <span class="exam-label">CIVIL SERVICES</span>
+      </article>
+
+      <article class="exam-card">
+        <div class="exam-icon">🛡️</div>
+        <h3>Defence Examinations</h3>
+        <p>Defence recruitment and entrance exam categories such as NDA, CDS, AFCAT and other pathways.</p>
+        <span class="exam-label">DEFENCE</span>
+      </article>
+    </div>
+  </div>
 </section>
 
-
-<!-- ================= TELEGRAM ================= -->
-
-<section id="telegram">
-
-  <div class="telegram-box">
-
-    <h2>
-      Practice On The Go
-    </h2>
-
-    <p>
-      Get questions and practice directly through Telegram.
-      No separate app installation required.
-    </p>
-
-
-    <a
-      href="https://t.me/anu_ssc_bot"
-      class="btn primary"
-      target="_blank"
-      rel="noopener">
-
-      Launch @anu_ssc_bot
-
-    </a>
-
+<section>
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <h2>Ready to begin your preparation?</h2>
+        <p>Open the practice dashboard and explore the question sets currently available.</p>
+      </div>
+      <a class="btn" href="practice-dashboard.html">Start Practicing →</a>
+    </div>
   </div>
-
 </section>
-
-
-<!-- ================= FAQ ================= -->
-
-<section id="faq">
-
-  <div class="section-title">
-
-    <h2>
-      Got Questions?
-    </h2>
-
-    <p>
-      A few things you might want to know.
-    </p>
-
-  </div>
-
-
-  <div class="faq-container">
-
-
-    <details class="faq-item">
-
-      <summary>
-        Is this platform free?
-      </summary>
-
-      <p>
-        The goal of SSC Practice Hub is to provide free
-        practice resources without putting essential
-        preparation behind a paywall.
-      </p>
-
-    </details>
-
-
-    <details class="faq-item">
-
-      <summary>
-        How do I use the Telegram bot?
-      </summary>
-
-      <p>
-        Open @anu_ssc_bot on Telegram and press Start.
-        The bot will gradually provide practice features
-        as the system is developed.
-      </p>
-
-    </details>
-
-
-    <details class="faq-item">
-
-      <summary>
-        Which SSC exams is this useful for?
-      </summary>
-
-      <p>
-        The platform is being built around SSC CHSL,
-        CGL, MTS, CPO and other major SSC exam patterns.
-      </p>
-
-    </details>
-
-
-    <details class="faq-item">
-
-      <summary>
-        Will the questions be actual PYQs?
-      </summary>
-
-      <p>
-        PYQs will be clearly identified. Fresh practice
-        questions will be labelled separately so you can
-        always know what type of question you are solving.
-      </p>
-
-    </details>
-
-
-  </div>
-
-</section>
-
-
-<!-- ================= ABOUT ================= -->
 
 <section id="about">
-
-  <div class="about-card">
-
-
-    <div class="avatar">
-      A
+  <div class="container">
+    <div class="section-head">
+      <h2>About SIKSHORA</h2>
+      <p>Learn. Practice. Progress.</p>
     </div>
 
-
-    <div>
-
-      <h3>
-        Anurag Kumar
-      </h3>
-
-
-      <div class="role">
-        Creator & Developer
-      </div>
-
-
-      <p>
-        Based in Jamui, Bihar, and currently pursuing
-        a B.A. in Hindi at Munger University,
-        I enjoy combining learning science with technology.
-      </p>
-
-
-      <p>
-        From UI and logic for mobile games to video editing
-        and digital projects, I enjoy building things.
-        SSC Practice Hub is an attempt to turn those skills
-        into something genuinely useful for students.
-      </p>
-
-
-      <div class="tags">
-
-        <span class="tag">
-          Game Dev
-        </span>
-
-        <span class="tag">
-          Video Editing
-        </span>
-
-        <span class="tag">
-          UI/UX Design
-        </span>
-
-        <span class="tag">
-          Content Creator
-        </span>
-
-      </div>
-
+    <div class="info-grid">
+      <article class="info-card">
+        <h3>Our Purpose</h3>
+        <p>
+          SIKSHORA is a competitive examination preparation platform built
+          to make learning and practice more organised and accessible.
+          The goal is to bring useful question practice and learning tools
+          together in one simple experience.
+        </p>
+      </article>
+      <article class="info-card">
+        <h3>Our Direction</h3>
+        <p>
+          We are starting with a focused question bank and building towards
+          wider exam coverage, better progress tracking and more helpful
+          preparation features over time.
+        </p>
+      </article>
     </div>
-
   </div>
-
 </section>
 
+<section id="telegram">
+  <div class="container">
+    <div class="telegram-card">
+      <div class="feature-icon" style="margin:0 auto 14px">✈️</div>
+      <h2>Join SIKSHORA on Telegram</h2>
+      <p>
+        Connect with the SIKSHORA Telegram community for bot-based practice
+        and platform updates.
+      </p>
+      <a class="btn" href="https://t.me/Sikshorabot" target="_blank" rel="noopener">
+        Open Telegram Bot →
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <h2>Frequently asked questions</h2>
+      <p>Some quick answers about the SIKSHORA platform.</p>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>What is SIKSHORA?</summary>
+        <p>SIKSHORA is a competitive examination preparation platform focused on question practice and learning resources.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Which exams are supported right now?</summary>
+        <p>The platform is being developed with SSC-first question coverage. Other exam categories are part of the broader roadmap and should not be treated as fully available yet.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do I start practising?</summary>
+        <p>Select the Start Practicing button to open the practice dashboard. Choose from the exams and question sets currently available.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Are Hindi and English both available?</summary>
+        <p>Hindi and English support is being developed. Language availability depends on the translations available in each question set.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Can I use SIKSHORA on my phone?</summary>
+        <p>Yes. The website is designed to adjust to mobile, tablet and desktop screen sizes.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Will my progress sync across devices?</summary>
+        <p>Account-based progress syncing across devices is planned and will become available after the backend is ready.</p>
+      </details>
+    </div>
+  </div>
+</section>
 </main>
 
-
-<!-- ================= FOOTER ================= -->
-
 <footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h3>SIKSHORA</h3>
+        <p>Learn. Practice. Progress.</p>
+        <p>A focused platform for competitive examination preparation.</p>
+      </div>
 
-  © 2026 SSC Practice Hub ·
-  Designed & Built by
-  <span>Anurag</span>
+      <div>
+        <h4>Explore</h4>
+        <div class="footer-links">
+          <a href="#features">Features</a>
+          <a href="#exams">Examination Categories</a>
+          <a href="#about">About Us</a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
 
+      <div>
+        <h4>Connect</h4>
+        <div class="footer-links">
+          <a href="https://t.me/Sikshorabot" target="_blank" rel="noopener">Telegram Bot</a>
+          <a href="mailto:contact@sikshora.in">Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © <span id="year"></span> SIKSHORA. All rights reserved.
+    </div>
+  </div>
 </footer>
 
-
-<!-- ================= JAVASCRIPT ================= -->
-
 <script>
-
-/* THEME TOGGLE */
-
-const themeToggle =
-  document.getElementById("themeToggle");
-
-const savedTheme =
-  localStorage.getItem("theme");
-
-
-if (savedTheme === "light") {
-
-  document.body.classList.add("light-mode");
-
-  themeToggle.textContent = "🌙";
-
-}
-
-
-themeToggle.addEventListener("click", () => {
-
-  document.body.classList.toggle("light-mode");
-
-
-  if (
-    document.body.classList.contains("light-mode")
-  ) {
-
-    themeToggle.textContent = "🌙";
-
-    localStorage.setItem("theme","light");
-
-  } else {
-
-    themeToggle.textContent = "☀️";
-
-    localStorage.setItem("theme","dark");
-
-  }
-
-});
-
-
-/* MOBILE MENU */
-
-const menuToggle =
-  document.getElementById("menuToggle");
-
-const mobileMenu =
-  document.getElementById("mobileMenu");
-
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
+const themeToggle = document.getElementById("themeToggle");
 
 menuToggle.addEventListener("click", () => {
-
-  mobileMenu.classList.toggle("active");
-
+  navLinks.classList.toggle("open");
 });
 
-
-/* CLOSE MOBILE MENU AFTER CLICK */
-
-const mobileLinks =
-  mobileMenu.querySelectorAll("a");
-
-
-mobileLinks.forEach(link => {
-
-  link.addEventListener("click", () => {
-    
-mobileMenu.classList.remove("active");
-
-  });
-
+navLinks.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => navLinks.classList.remove("open"));
 });
 
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  const isDark = document.body.classList.contains("dark");
+  themeToggle.textContent = isDark ? "☀" : "☾";
+  localStorage.setItem("sikshora-theme", isDark ? "dark" : "light");
+});
+
+if (localStorage.getItem("sikshora-theme") === "dark") {
+  document.body.classList.add("dark");
+  themeToggle.textContent = "☀";
+}
+
+document.getElementById("year").textContent = new Date().getFullYear();
 </script>
-
 </body>
 </html>
