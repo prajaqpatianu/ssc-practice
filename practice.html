@@ -162,28 +162,31 @@ function normalizeQuestions(payload){
   return list.filter(q => q && typeof q.question === "string" && Array.isArray(q.options) && q.options.length >= 2);
 }
 
-async function loadQuestions(exam,language){
+async function loadQuestions(exam,language,subject="All",count=MAX_QUESTIONS){
   if(!QUESTION_API_URL){
-    throw new Error("Cloudflare question API URL abhi configure nahi hai. Worker ka exact public questions endpoint QUESTION_API_URL mein set karna hoga. Worker root URL ko guess karke use nahi kiya gaya hai.");
+    throw new Error("Cloudflare questions API URL configure nahi hai.");
   }
   const url = new URL(QUESTION_API_URL);
   url.searchParams.set("exam",exam);
   url.searchParams.set("language",language);
-  const subject = readStore("ssc_subject");
-  if(subject && subject !== "MIXED") url.searchParams.set("subject",subject);
-  url.searchParams.set("limit",String(MAX_QUESTIONS));
-  const response = await fetch(url.toString(),{method:"GET",headers:{"Accept":"application/json"},cache:"no-store"});
-  if(!response.ok) throw new Error(`Question API request failed (${response.status}). Worker endpoint aur CORS settings check karein.`);
+  if(subject && !["ALL","MIXED","ALL SUBJECTS"].includes(String(subject).trim().toUpperCase())){
+    url.searchParams.set("subject",subject);
+  }
+  url.searchParams.set("limit",String(Math.min(Math.max(Number(count)||MAX_QUESTIONS,1),MAX_QUESTIONS)));
+  let response;
+  try{
+    response = await fetch(url.toString(),{method:"GET",headers:{"Accept":"application/json"},cache:"no-store"});
+  }catch(fetchError){
+    throw new Error("Browser Cloudflare API tak nahi pahunch pa raha. Worker deploy status, API URL aur CORS check karna hoga. Details: " + fetchError.message);
+  }
+  if(!response.ok) {
+    const detail = await response.text().catch(()=> "");
+    throw new Error(`Cloudflare API error ${response.status}: ${detail.slice(0,180) || response.statusText}`);
+  }
   const payload = await response.json();
-  let list = normalizeQuestions(payload);
-  list = list.filter(q => {
-    const exams = Array.isArray(q.exam) ? q.exam : (q.exam ? [q.exam] : []);
-    const normalize = value => String(value || "").toUpperCase().replace(/^SSC\s*/, "").replace(/[^A-Z0-9]/g, "");
-    const examMatch = !exams.length || exams.some(value => normalize(value) === normalize(exam));
-    return examMatch;
-  });
-  if(!list.length) throw new Error("Selected exam aur language ke liye API se koi valid question nahi mila.");
-  return shuffle(list).slice(0,MAX_QUESTIONS);
+  const list = normalizeQuestions(payload);
+  if(!list.length) throw new Error("Is exam/language ke liye API ne koi valid question return nahi kiya.");
+  return shuffle(list).slice(0,Math.min(Number(count)||MAX_QUESTIONS,MAX_QUESTIONS));
 }
 function shuffle(items){
   const arr=[...items];
@@ -191,14 +194,37 @@ function shuffle(items){
   return arr;
 }
 
-async function init(){
-  const exam=readStore(STORAGE.exam);
-  const language=readStore(STORAGE.language);
-  const setupDone=readStore(STORAGE.setup);
-  if(!exam || !language || setupDone!=="true"){goBack();return;}
-  $("examBadge").textContent=`${exam} · ${language}`;
+function getPracticeSettings(){
+  // Current dashboard stores one complete session object under this key.
   try{
-    quizQuestions=await loadQuestions(exam,language);
+    const current = JSON.parse(readStore("sikshoraSession") || "null");
+    if(current && current.exam){
+      const rawLanguage = String(current.language || "en").trim().toLowerCase();
+      const language = ({english:"en",en:"en",hindi:"hi",hi:"hi",bilingual:"both",both:"both"})[rawLanguage] || "en";
+      return {
+        exam: String(current.exam).trim(),
+        language,
+        subject: current.subject || "All",
+        count: Math.min(Math.max(Number(current.count) || 40,1),MAX_QUESTIONS)
+      };
+    }
+  }catch(e){ console.warn("Could not read SIKSHORA session",e); }
+
+  // Legacy support for the older setup page.
+  const exam = readStore(STORAGE.exam);
+  const rawLanguage = String(readStore(STORAGE.language) || "").trim().toLowerCase();
+  const language = ({english:"en",en:"en",hindi:"hi",hi:"hi",bilingual:"both",both:"both"})[rawLanguage];
+  if(!exam || !language || readStore(STORAGE.setup)!=="true") return null;
+  return {exam,language,subject:"All",count:MAX_QUESTIONS};
+}
+
+async function init(){
+  const settings = getPracticeSettings();
+  if(!settings){goBack();return;}
+  const languageLabel = settings.language==="hi" ? "Hindi" : settings.language==="both" ? "Bilingual" : "English";
+  $("examBadge").textContent=`${settings.exam} · ${languageLabel}`;
+  try{
+    quizQuestions=await loadQuestions(settings.exam,settings.language,settings.subject,settings.count);
     answers=new Array(quizQuestions.length).fill(null);
     marked=new Array(quizQuestions.length).fill(false);
     $("loadingBox").classList.add("hidden");
@@ -321,7 +347,7 @@ function finishQuiz(auto=false){
   const total=quizQuestions.length;
   const accuracy=Math.round(correct/total*100);
   const elapsed=Math.max(0,Math.floor((Date.now()-startedAt)/1000));
-  saveAttempt({total,correct,wrong,skipped,accuracy,exam:readStore(STORAGE.exam)||"",language:readStore(STORAGE.language)||"",date:new Date().toISOString(),timeTaken:elapsed});
+  saveAttempt({total,correct,wrong,skipped,accuracy,exam:(getPracticeSettings()?.exam)||"",language:(getPracticeSettings()?.language)||"",date:new Date().toISOString(),timeTaken:elapsed});
   $("quizScreen").classList.add("hidden");
   $("resultScreen").classList.remove("hidden");
   $("resultTitle").textContent=auto?"Time is up! Here is your result.":"Your Result";
