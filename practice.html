@@ -120,7 +120,7 @@
 
   This page intentionally does not fetch questions.json or modify your bank.
 */
-const QUESTION_API_URL = window.SIKSHORA_CONFIG?.QUESTION_API_URL || "";
+const QUESTION_API_URL = window.SIKSHORA_CONFIG?.QUESTION_API_URL || "https://ssc-practice-bot.anuragkumarjmi01.workers.dev/api/questions";
 const STORAGE = {
   exam: "ssc_exam",
   language: "ssc_language",
@@ -169,6 +169,8 @@ async function loadQuestions(exam,language){
   const url = new URL(QUESTION_API_URL);
   url.searchParams.set("exam",exam);
   url.searchParams.set("language",language);
+  const subject = readStore("ssc_subject");
+  if(subject && subject !== "MIXED") url.searchParams.set("subject",subject);
   url.searchParams.set("limit",String(MAX_QUESTIONS));
   const response = await fetch(url.toString(),{method:"GET",headers:{"Accept":"application/json"},cache:"no-store"});
   if(!response.ok) throw new Error(`Question API request failed (${response.status}). Worker endpoint aur CORS settings check karein.`);
@@ -176,10 +178,9 @@ async function loadQuestions(exam,language){
   let list = normalizeQuestions(payload);
   list = list.filter(q => {
     const exams = Array.isArray(q.exam) ? q.exam : (q.exam ? [q.exam] : []);
-    const examMatch = !exams.length || exams.includes(exam);
-    const lang = String(q.language || "").toLowerCase();
-    const languageMatch = !lang || lang === language.toLowerCase() || lang === "both";
-    return examMatch && languageMatch;
+    const normalize = value => String(value || "").toUpperCase().replace(/^SSC\s*/, "").replace(/[^A-Z0-9]/g, "");
+    const examMatch = !exams.length || exams.some(value => normalize(value) === normalize(exam));
+    return examMatch;
   });
   if(!list.length) throw new Error("Selected exam aur language ke liye API se koi valid question nahi mila.");
   return shuffle(list).slice(0,MAX_QUESTIONS);
