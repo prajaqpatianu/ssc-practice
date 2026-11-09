@@ -194,13 +194,53 @@ function shuffle(items){
   return arr;
 }
 
+function normalizeLanguage(value){
+  const raw = String(value || "").trim().toLowerCase();
+  const map = {
+    "english":"en", "en":"en",
+    "hindi":"hi", "हिन्दी":"hi", "हिंदी":"hi", "hi":"hi",
+    "bilingual":"both", "hindi + english":"both",
+    "english + hindi":"both", "both":"both", "bi-lingual":"both"
+  };
+  return map[raw] || null;
+}
+
 function getPracticeSettings(){
-  // Current dashboard stores one complete session object under this key.
+  /*
+    IMPORTANT:
+    The currently-used practice dashboard saves the user's latest choice in
+    ssc_exam + ssc_language + ssc_setup_done.
+    An older sikshoraSession may still exist in this browser. Therefore the
+    latest dashboard keys MUST be checked first, otherwise stale Hindi can
+    override a newly selected English preference.
+  */
+  const dashboardExam = readStore(STORAGE.exam);
+  const dashboardLanguage = normalizeLanguage(readStore(STORAGE.language));
+  const setupDone = readStore(STORAGE.setup) === "true";
+
+  if(dashboardExam && dashboardLanguage && setupDone){
+    const settings = {
+      exam: String(dashboardExam).trim(),
+      language: dashboardLanguage,
+      subject: readStore("ssc_subject") || "All",
+      count: Math.min(Math.max(Number(readStore("ssc_question_count")) || 40,1),MAX_QUESTIONS)
+    };
+
+    // Keep the newer session object synchronized with the latest dashboard choice.
+    writeStore("sikshoraSession", JSON.stringify({
+      exam: settings.exam,
+      language: settings.language,
+      subject: settings.subject,
+      count: settings.count
+    }));
+    return settings;
+  }
+
+  // Newer dashboard format: one complete session object.
   try{
     const current = JSON.parse(readStore("sikshoraSession") || "null");
     if(current && current.exam){
-      const rawLanguage = String(current.language || "en").trim().toLowerCase();
-      const language = ({english:"en",en:"en",hindi:"hi",hi:"hi",bilingual:"both",both:"both"})[rawLanguage] || "en";
+      const language = normalizeLanguage(current.language) || "en";
       return {
         exam: String(current.exam).trim(),
         language,
@@ -208,14 +248,26 @@ function getPracticeSettings(){
         count: Math.min(Math.max(Number(current.count) || 40,1),MAX_QUESTIONS)
       };
     }
-  }catch(e){ console.warn("Could not read SIKSHORA session",e); }
+  }catch(e){
+    console.warn("Could not read SIKSHORA session",e);
+  }
 
-  // Legacy support for the older setup page.
-  const exam = readStore(STORAGE.exam);
-  const rawLanguage = String(readStore(STORAGE.language) || "").trim().toLowerCase();
-  const language = ({english:"en",en:"en",hindi:"hi",hi:"hi",bilingual:"both",both:"both"})[rawLanguage];
-  if(!exam || !language || readStore(STORAGE.setup)!=="true") return null;
-  return {exam,language,subject:"All",count:MAX_QUESTIONS};
+  // Also support the saved-preferences format used by the newer setup page.
+  try{
+    const pref = JSON.parse(readStore("sikshora_preferences") || "null");
+    if(pref && pref.exam){
+      return {
+        exam: String(pref.exam).trim(),
+        language: normalizeLanguage(pref.language) || "en",
+        subject: "All",
+        count: 40
+      };
+    }
+  }catch(e){
+    console.warn("Could not read SIKSHORA preferences",e);
+  }
+
+  return null;
 }
 
 async function init(){
