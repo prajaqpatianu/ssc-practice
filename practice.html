@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,6 +129,19 @@ const STORAGE = {
 };
 const DEFAULT_DURATION_MINUTES = 60;
 const MAX_QUESTIONS = 50;
+
+// Dashboard currently stores display labels (English/Hindi/Bilingual).
+// Cloudflare Worker expects the API values en/hi/both.
+function normalizeLanguage(value){
+  const v=String(value||"").trim().toLowerCase();
+  if(["hi","hindi","हिन्दी","हिंदी"].includes(v)) return "hi";
+  if(["both","bilingual","hindi + english","hindi+english"].includes(v)) return "both";
+  if(["en","english"].includes(v)) return "en";
+  return "";
+}
+function languageLabel(value){
+  return value==="hi"?"Hindi":value==="both"?"Bilingual":"English";
+}
 const LETTERS = ["A","B","C","D"];
 
 let quizQuestions = [];
@@ -163,31 +175,31 @@ function normalizeQuestions(payload){
   return list.filter(q => q && typeof q.question === "string" && Array.isArray(q.options) && q.options.length >= 2);
 }
 
-async function loadQuestions(exam,language,subject="All",count=MAX_QUESTIONS){
+async function loadQuestions(exam,language){
   if(!QUESTION_API_URL){
-    throw new Error("Cloudflare questions API URL configure nahi hai.");
+    throw new Error("Cloudflare question API URL abhi configure nahi hai. Worker ka exact public questions endpoint QUESTION_API_URL mein set karna hoga. Worker root URL ko guess karke use nahi kiya gaya hai.");
   }
   const url = new URL(QUESTION_API_URL);
   url.searchParams.set("exam",exam);
   url.searchParams.set("language",language);
-  if(subject && !["ALL","MIXED","ALL SUBJECTS"].includes(String(subject).trim().toUpperCase())){
-    url.searchParams.set("subject",subject);
-  }
-  url.searchParams.set("limit",String(Math.min(Math.max(Number(count)||MAX_QUESTIONS,1),MAX_QUESTIONS)));
-  let response;
-  try{
-    response = await fetch(url.toString(),{method:"GET",headers:{"Accept":"application/json"},cache:"no-store"});
-  }catch(fetchError){
-    throw new Error("Cloudflare API tak browser request nahi pahunchi. Language selection is separate and is now read from the saved dashboard preference. Check Worker deployment, /api/questions route and CORS. URL: " + url.toString() + " | Details: " + fetchError.message);
-  }
-  if(!response.ok) {
-    const detail = await response.text().catch(()=> "");
-    throw new Error(`Cloudflare API error ${response.status}: ${detail.slice(0,180) || response.statusText}`);
-  }
+  const subject = readStore("ssc_subject");
+  if(subject && subject !== "MIXED") url.searchParams.set("subject",subject);
+  url.searchParams.set("limit",String(MAX_QUESTIONS));
+  const response = await fetch(url.toString(),{method:"GET",headers:{"Accept":"application/json"},cache:"no-store"});
+  if(!response.ok) throw new Error(`Question API request failed (${response.status}). Worker endpoint aur CORS settings check karein.`);
   const payload = await response.json();
-  const list = normalizeQuestions(payload);
-  if(!list.length) throw new Error("Is exam/language ke liye API ne koi valid question return nahi kiya.");
-  return shuffle(list).slice(0,Math.min(Number(count)||MAX_QUESTIONS,MAX_QUESTIONS));
+  let list = normalizeQuestions(payload);
+  list = list.filter(q => {
+    const exams = Array.isArray(q.exam) ? q.exam : (q.exam ? [q.exam] : []);
+    const normalize = value => String(value || "").toUpperCase().replace(/^SSC\s*/, "").replace(/[^A-Z0-9]/g, "");
+    const examMatch = !exams.length || exams.some(value => normalize(value) === normalize(exam));
+    return examMatch;
+  });
+  if(!list.length){
+    if(language!=="en") throw new Error("Is exam ke liye abhi selected language mein translated questions available nahi hain. Hindi/Bilingual question content add hone ke baad ye mode chalega. Filhaal setup par jaakar English select karein.");
+    throw new Error("Is exam ka question bank abhi Cloudflare D1 mein available nahi hai. Abhi SSC CHSL ke questions uploaded hain. Doosre exams ke questions add hone ke baad hi unka practice start hoga.");
+  }
+  return shuffle(list).slice(0,MAX_QUESTIONS);
 }
 function shuffle(items){
   const arr=[...items];
@@ -195,87 +207,18 @@ function shuffle(items){
   return arr;
 }
 
-function normalizeLanguage(value){
-  const raw = String(value || "").trim().toLowerCase();
-  const map = {
-    "english":"en", "en":"en",
-    "hindi":"hi", "हिन्दी":"hi", "हिंदी":"hi", "hi":"hi",
-    "bilingual":"both", "hindi + english":"both",
-    "english + hindi":"both", "both":"both", "bi-lingual":"both"
-  };
-  return map[raw] || null;
-}
-
-function getPracticeSettings(){
-  // Source of truth: the dashboard's saved preference.
-  // The dashboard stores this in sikshora_preferences. Read it before any
-  // older session object so a stale Hindi value cannot override English.
-  try{
-    const pref = JSON.parse(readStore("sikshora_preferences") || "null");
-    if(pref && pref.exam){
-      const settings = {
-        exam: String(pref.exam).trim(),
-        language: normalizeLanguage(pref.language) || "en",
-        subject: "All",
-        count: 40
-      };
-
-      // If a practice session object exists, retain its subject and count,
-      // but never let its old language override the saved dashboard choice.
-      try{
-        const session = JSON.parse(readStore("sikshoraSession") || "null");
-        if(session){
-          settings.subject = session.subject || settings.subject;
-          settings.count = Math.min(Math.max(Number(session.count) || settings.count,1),MAX_QUESTIONS);
-        }
-      }catch(_){}
-
-      writeStore("sikshoraSession", JSON.stringify(settings));
-      writeStore(STORAGE.exam, settings.exam);
-      writeStore(STORAGE.language, settings.language);
-      writeStore(STORAGE.setup, "true");
-      return settings;
-    }
-  }catch(e){
-    console.warn("Could not read SIKSHORA saved preferences",e);
-  }
-
-  // Legacy setup pages: read their direct keys only if no saved preference exists.
-  const dashboardExam = readStore(STORAGE.exam);
-  const dashboardLanguage = normalizeLanguage(readStore(STORAGE.language));
-  if(dashboardExam && dashboardLanguage && readStore(STORAGE.setup) === "true"){
-    return {
-      exam: String(dashboardExam).trim(),
-      language: dashboardLanguage,
-      subject: readStore("ssc_subject") || "All",
-      count: Math.min(Math.max(Number(readStore("ssc_question_count")) || 40,1),MAX_QUESTIONS)
-    };
-  }
-
-  // Last fallback for installations that only have a session object.
-  try{
-    const current = JSON.parse(readStore("sikshoraSession") || "null");
-    if(current && current.exam){
-      return {
-        exam: String(current.exam).trim(),
-        language: normalizeLanguage(current.language) || "en",
-        subject: current.subject || "All",
-        count: Math.min(Math.max(Number(current.count) || 40,1),MAX_QUESTIONS)
-      };
-    }
-  }catch(e){
-    console.warn("Could not read SIKSHORA session",e);
-  }
-  return null;
-}
 async function init(){
-  const settings = getPracticeSettings();
-  if(!settings){goBack();return;}
-  const languageLabel = settings.language==="hi" ? "Hindi" : settings.language==="both" ? "Bilingual" : "English";
-  console.info("SIKSHORA selected practice language:", settings.language);
-  $("examBadge").textContent=`${settings.exam} · ${languageLabel}`;
+  const exam=String(readStore(STORAGE.exam)||"").trim();
+  const savedLanguage=readStore(STORAGE.language);
+  const language=normalizeLanguage(savedLanguage);
+  const setupDone=readStore(STORAGE.setup);
+  if(!exam || !language || setupDone!=="true"){
+    showError("Practice setup incomplete","Please go back and select your exam and language again.");
+    return;
+  }
+  $("examBadge").textContent=`${exam} · ${languageLabel(language)}`;
   try{
-    quizQuestions=await loadQuestions(settings.exam,settings.language,settings.subject,settings.count);
+    quizQuestions=await loadQuestions(exam,language);
     answers=new Array(quizQuestions.length).fill(null);
     marked=new Array(quizQuestions.length).fill(false);
     $("loadingBox").classList.add("hidden");
@@ -398,7 +341,7 @@ function finishQuiz(auto=false){
   const total=quizQuestions.length;
   const accuracy=Math.round(correct/total*100);
   const elapsed=Math.max(0,Math.floor((Date.now()-startedAt)/1000));
-  saveAttempt({total,correct,wrong,skipped,accuracy,exam:(getPracticeSettings()?.exam)||"",language:(getPracticeSettings()?.language)||"",date:new Date().toISOString(),timeTaken:elapsed});
+  saveAttempt({total,correct,wrong,skipped,accuracy,exam:readStore(STORAGE.exam)||"",language:normalizeLanguage(readStore(STORAGE.language))||"",date:new Date().toISOString(),timeTaken:elapsed});
   $("quizScreen").classList.add("hidden");
   $("resultScreen").classList.remove("hidden");
   $("resultTitle").textContent=auto?"Time is up! Here is your result.":"Your Result";
@@ -444,7 +387,3 @@ init();
 </script>
 </body>
 </html>
-
-
-
-
