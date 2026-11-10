@@ -136,34 +136,6 @@ The selected question count cannot exceed the questions actually available.
 <script>
 const $=id=>document.getElementById(id);
 const STORAGE_KEY='sikshoraPracticeSettings';
-const LEGACY_EXAM_KEY='ssc_exam';
-const LEGACY_LANGUAGE_KEY='ssc_language';
-const LEGACY_SETUP_KEY='ssc_setup_done';
-const SESSION_KEY='sikshoraSession';
-
-function normaliseLanguage(value){
-  const v=String(value||'en').trim().toLowerCase();
-  if(['hi','hindi'].includes(v)) return 'hi';
-  if(['bilingual','both','hi-en','en-hi'].includes(v)) return 'both';
-  return 'en';
-}
-
-function persistPracticeSettings(s){
-  const language=normaliseLanguage(s.language);
-  const exam=s.exam==='CHSL'?'CHSL':s.exam;
-  // Keep the new settings object and the legacy keys in sync.
-  localStorage.setItem(STORAGE_KEY,JSON.stringify({...s,language}));
-  localStorage.setItem(LEGACY_EXAM_KEY,exam);
-  localStorage.setItem(LEGACY_LANGUAGE_KEY,language);
-  localStorage.setItem(LEGACY_SETUP_KEY,'true');
-  localStorage.setItem(SESSION_KEY,JSON.stringify({
-    category:s.category,
-    exam,
-    subject:'All',
-    count:Number(s.count)||40,
-    language
-  }));
-}
 
 const exams={
 'SSC':[
@@ -278,18 +250,17 @@ function beginPractice(s){
 const messageBox=$('savedView').hidden?$('status'):$('savedStatus');
 messageBox.textContent='';
 
-const selectedLanguage=normaliseLanguage(s.language);
+const selectedLanguage=String(s.language||'en').trim().toLowerCase();
+
 if(s.category!=='SSC'||s.exam!=='CHSL'){
 messageBox.textContent=
 'This exam is listed, but its question bank is not available yet. Currently only SSC CHSL is supported.';
 return false;
 }
 
-// The current D1 bank contains English questions. Hindi/Bilingual
-// should only be enabled after translated question data is populated.
-if(selectedLanguage!=='en'){
+if(!['en','english'].includes(selectedLanguage)){
 messageBox.textContent=
-'Hindi/Bilingual question content is not available for this exam yet. Please select English.';
+'Hindi and Bilingual question translations are not available yet. Select English to start the available SSC CHSL practice.';
 return false;
 }
 
@@ -298,10 +269,17 @@ category:'SSC',
 exam:'CHSL',
 subject:'All',
 count:Math.min(Number(s.count)||40,40),
-language:selectedLanguage
+language:'en'
 };
 
-persistPracticeSettings(session);
+// Keep the new SIKSHORA session and the legacy keys in sync.
+// practice.html reads the session first, then uses these keys as fallback.
+localStorage.setItem('sikshoraSession',JSON.stringify(session));
+localStorage.setItem('ssc_exam',session.exam);
+localStorage.setItem('ssc_language',session.language);
+localStorage.setItem('ssc_setup_done','true');
+localStorage.setItem('ssc_subject','MIXED');
+localStorage.setItem('ssc_question_count',String(session.count));
 location.href='practice.html';
 return true;
 }
@@ -317,7 +295,6 @@ $(id).addEventListener('change',updateSummary);
 
 $('saveBtn').addEventListener('click',()=>{
 const s=current();
-s.language=normaliseLanguage(s.language);
 localStorage.setItem(STORAGE_KEY,JSON.stringify(s));
 $('status').textContent='';
 showSaved(s);
